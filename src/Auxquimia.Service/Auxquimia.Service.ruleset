@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SonarQube - Auxquimia develop Izertis sin FxCop" ToolsVersion="15.0">
+  <Include Path="..\..\.sonarlint\Auxquimia_developcsharp.ruleset" Action="Default" />
+  <Include Path="..\.sonarlint\Auxquimia_developcsharp.ruleset" Action="Default" />
+</RuleSet>

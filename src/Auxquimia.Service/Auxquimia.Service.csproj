@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Auxquimia</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>Auxquimia.Service.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>Auxquimia.Service.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Service\Business\Kafka\IAuxquimiaKafkaService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="4.5.0" />
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Capgemini.CommonObjectUtils" Version="1.3.0" />
+    <PackageReference Include="Confluent.Kafka" Version="1.6.3" />
+    <PackageReference Include="CsvHelper" Version="24.0.1" />
+    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.0.8" />
+    <PackageReference Include="librdkafka.redist" Version="1.6.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NHibernate" Version="5.4.0" />
+    <PackageReference Include="NHibernate.Caches.CoreDistributedCache" Version="5.4.0" />
+    <PackageReference Include="NPOI" Version="2.5.2" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.3.352.12" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Symbols" Version="1.3.352.12" />
+    <PackageReference Include="Rebus.HeaderConverterExtensions" Version="1.0.0" />
+    <PackageReference Include="SolrNet" Version="1.0.13" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1.0" />
+  </ItemGroup>
+
+</Project>

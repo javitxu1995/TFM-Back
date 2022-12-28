@@ -1,0 +1,17 @@
+# Registro de cambios
+
+## 1.2.0
+
+* Se actualiza la versión de la librería Izertis.Caching.Utilities a 1.1.1
+* Se actualiza la versión de la librería Izertis.Interfaces.Abstractions a 1.1.0
+* Se actualiza la versión de la librería Izertis.NHibernate.Repositories a 1.1.2
+* Se actualiza la versión de la librería Izertis.Solr.Indexers a 1.1.1
+* Se eliminan referencias explícitas a las librerías Izertis.Paging.Abstractions e Izertis.Solr.Abstractions
+* Se cambia la imagen de solr
+* Se añade Redis como parte del entorno de desarrollo para poder persistir configuraciones y caché
+* [ARQNET-33] Se modifica el listado de roles de un usuario para leer directamente el enumerado
+* [ARQNET-34] Se cambia la forma en la que se implementan las búsquedas, haciendolas más REST-friendly
+* Se añade mecanismo para hacer que la configuración de log sea modificable por entorno, de forma análoga a la configuración
+* Se añade configuración correcta para NLog, pudiendo inyectar ILogger<> en componentes ajenos al arquetipo
+* Se añade el campo LastIndexed a la entidad base, alineando el desarrollo de [ARQNET-29]
+* NHibernate arranca por defecto nada más arrancar la aplicación, para aplicar los cambios en la BBDD antes del primer acceso.

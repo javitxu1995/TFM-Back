@@ -1,0 +1,78 @@
+---
+cache:
+  regions:
+    - name: default
+      expiration: 3600
+      sliding_expiration: 1800
+database:
+  app:
+    connection_string: server=127.0.0.1;port=5432;database=Auxquimia
+      ;user id=postgres;password=admin123;
+    dialect: NHibernate.Dialect.PostgreSQL83Dialect, NHibernate
+    driver: NHibernate.Driver.NpgsqlDriver, NHibernate
+    provider: NHibernate.Connection.DriverConnectionProvider, NHibernate
+    exception_converter: NHibernate.Exceptions.SQLStateConverter, NHibernate
+    mapping_assemblies: Auxquimia.Service
+    current_session_context: async_local
+    hbm2ddl_auto: update
+    cache:
+      default_expiration: 3600
+      use_minimal_puts: false
+      use_query_cache: true
+oauth:
+  require_ssl: false
+cors:
+  enabled: false
+  allow_credentials: true
+  allowed_methods:
+    - GET
+    - PUT
+    - POST
+    - DELETE
+    - HEAD
+    - OPTIONS
+  allowed_headers:
+    - authorization
+    - content-type
+identity_server:
+  api_resources:
+    - name: app_api
+      display_name: Regular API
+  clients:
+    - client_id: acme
+      client_secrets:
+        - acmesecret
+      allow_offline_access: true
+      allowed_grant_types: 
+        - password
+        - urlToken
+      allowed_scopes:
+        - app_api
+      refresh_token_lifetime: 2592000
+      sliding_refresh_token_lifetime: 1296000
+  use_developer_credential: false
+  signing_credential_path: "/path/to/cert.pfx"
+  signing_credential_password: password
+  redis:
+    enabled: true
+    connection_string: localhost:6379
+    db_num: 1
+    db_prefix: identity_server_operational
+opcua:
+  client:
+    node-file: Servipesainterface.xml
+ftp:
+  server: localhost:21
+  filepath_read: working_order.csv
+  filepath_write: working_order_write.csv
+  username: user
+  password: 1234
+kafka:
+  server: localhost:9092
+email_config:
+  email_server_out: "smtp.gmail.com"
+  email_require_ssl_out: true
+  email_port_out: 587
+  email_address: "izertisdotnet@gmail.com"
+  email_pass: "net@izertis"
+  url: http://localhost:4200/password

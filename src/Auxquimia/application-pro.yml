@@ -1,0 +1,38 @@
+---
+cors:
+  enabled: true
+  allowed_origins:
+    - http://auxq-pre.westeurope.cloudapp.azure.com
+    - https://auxq-pre.westeurope.cloudapp.azure.com
+cache:
+  remote:
+    enabled: false
+  redis:
+    connection_string: "auxquimia-redis-master.auxquimia.svc.cluster.local,connectTimeout=2000,syncTimeout=2000,keepalive=20"
+identity_server:
+  redis:
+    enabled: true
+    connection_string: "auxquimia-redis-master.auxquimia.svc.cluster.local,connectTimeout=2000,syncTimeout=2000,keepalive=20"
+  use_developer_credential: true
+database:
+  app:
+    connection_string: server=eloping-gerbil-postgresql.default.svc.cluster.local;port=5432;database=auxquimia
+      ;user id=auxquimia;password=Aux2021$;
+opcua:
+  client:
+    node-file: Servipesainterface.xml
+ftp:
+  server: localhost:21
+  filepath_read: working_order.csv
+  filepath_write: working_order_write.csv
+  username: user
+  password: 1234
+kafka:
+  server: auxquimia-kafka
+email_config:
+  email_server_out: "smtp.gmail.com"
+  email_require_ssl_out: true
+  email_port_out: 587
+  email_address: "izertisdotnet@gmail.com"
+  email_pass: "net@izertis"
+  url: https://auxq-pre.westeurope.cloudapp.azure.com

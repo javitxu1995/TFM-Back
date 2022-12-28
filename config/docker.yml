@@ -1,0 +1,10 @@
+baseImage: mcr.microsoft.com/dotnet/core/aspnet:2.1.23-bionic
+
+app:
+  mainDll: Auxquimia.dll
+  libs: 
+    libgdiplus: false
+    libntlmssp: false
+  environment: 
+    LD_LIBRARY_PATH: /usr/lib
+  volumes: []

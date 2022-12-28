@@ -1,0 +1,38 @@
+---
+cors:
+  enabled: true
+  allowed_origins:
+    - http://localhost:4200
+    - https://jwt.io
+cache:
+  remote:
+    enabled: false
+  redis:
+    connection_string: "localhost:6379,keepalive=20"
+identity_server:
+  redis:
+    enabled: true
+    connection_string: "localhost:6379,keepalive=20"
+  use_developer_credential: true
+database:
+  app:
+    connection_string: server=127.0.0.1;port=5432;database=auxquimia
+      ;user id=postgres;password=admin123;
+opcua:
+  client:
+    node-file: Servipesainterface.xml
+ftp:
+  server: localhost:21
+  filepath_read: working_order.csv
+  filepath_write: working_order_write.csv
+  username: user
+  password: 1234
+kafka:
+  server: http://localhost:29092
+email_config:
+  email_server_out: "smtp.gmail.com"
+  email_require_ssl_out: true
+  email_port_out: 587
+  email_address: "izertisdotnet@gmail.com"
+  email_pass: "net@izertis"
+  url: http://localhost:4200/password
