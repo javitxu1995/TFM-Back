@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Auxquimia.Utils.Database.MVC
+namespace Auxquimia.Utils.MVC.Tools
 {
-    public interface IService<T>
+    public interface IService<T, Guid>
     {
         Task<IList<T>> GetAllAsync();
 

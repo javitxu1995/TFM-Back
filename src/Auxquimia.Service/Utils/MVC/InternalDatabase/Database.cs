@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Auxquimia.Utils.Database.MVC
+namespace Auxquimia.Utils.MVC.InternalDatabase
 {
     public static class Database
     {
@@ -13,7 +13,7 @@ namespace Auxquimia.Utils.Database.MVC
         {
             get
             {
-                if(_sessionFactory == null)
+                if (_sessionFactory == null)
                 {
                     var configuration = new Configuration();
                     configuration.Configure();

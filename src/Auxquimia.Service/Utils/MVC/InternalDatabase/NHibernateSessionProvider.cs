@@ -4,21 +4,28 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Auxquimia.Utils.Database.MVC
+namespace Auxquimia.Utils.MVC.InternalDatabase
 {
-    public class RepositoryBase<T> : IRepository<T>, IDisposable
+
+    public abstract class NHibernateSessionProvider : IDisposable
     {
         protected ISession _session = null;
         protected ITransaction _transaction = null;
 
-        public RepositoryBase()
+        public NHibernateSessionProvider()
         {
             _session = Database.OpenSession();
         }
-        public RepositoryBase(ISession session)
+        public NHibernateSessionProvider(ISession session)
         {
             _session = session;
         }
+
+        public ISession CurrentSession()
+        {
+            return this._session;
+        }
+
 
         #region Transaction and Session Management Methods
 
@@ -59,27 +66,7 @@ namespace Auxquimia.Utils.Database.MVC
 
         #endregion
 
-        #region IRepository Members
-        public Task Delete(T entity)
-        {
-            return _session.DeleteAsync(entity);
-        }
-        public Task<IList<T>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> GetAsync(Guid id)
-        {
-            return _session.LoadAsync<T>(id);
-        }
-
-        public Task Save(T entity)
-        {
-            //_session.SaveOrUpdate(entity);
-            return _session.SaveAsync(entity);
-        }
-        #endregion
+    
         #region IDisposable Members
         public void Dispose()
         {

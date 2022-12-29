@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Auxquimia.Utils.Database.MVC
+namespace Auxquimia.Utils.MVC.Tools
 {
-    public interface IRepository<T>
+    public interface IRepository<T, Guid>
     {
-        Task Save(T entity);
-        Task Delete(T entity);
         Task<IList<T>> GetAllAsync();
+
         Task<T> GetAsync(Guid id);
     }
 }

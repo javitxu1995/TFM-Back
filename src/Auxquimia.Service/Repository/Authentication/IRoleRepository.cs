@@ -2,14 +2,15 @@
 {
     using Auxquimia.Filters.Authentication;
     using Auxquimia.Model.Authentication;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IRoleRepository" />.
     /// </summary>
-    interface IRoleRepository : ISupportsSave<Role, Guid>, IDao<Role, Guid>, ISearchableDao<Role, RoleSearchFilter>
+    interface IRoleRepository : IRepositoryBase<Role>
+    //ISupportsSave<Role, Guid>, IDao<Role, Guid>, ISearchableDao<Role, RoleSearchFilter>
     {
         /// <summary>
         /// The getByName.

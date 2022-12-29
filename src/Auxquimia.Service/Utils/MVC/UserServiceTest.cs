@@ -1,4 +1,6 @@
 ﻿using Auxquimia.Model.Authentication;
+using Auxquimia.Utils.MVC.InternalDatabase;
+using Auxquimia.Utils.MVC.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Auxquimia.Utils.Database.MVC
 {
-    internal class UserServiceTest : IService<User>
+    internal class UserServiceTest : IService<User, Guid>
     {
         public Task<IList<User>> GetAllAsync()
         {
@@ -51,5 +53,5 @@ namespace Auxquimia.Utils.Database.MVC
         {
             throw new NotImplementedException();
         }
-    } 
+    }
 }
