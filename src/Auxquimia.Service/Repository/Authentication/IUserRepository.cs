@@ -2,8 +2,8 @@ namespace Auxquimia.Repository.Authentication
 {
     using Auxquimia.Model.Authentication;
     using Auxquimia.Service.Filters.Authentication;
-    using Izertis.Interfaces.Abstractions;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Auxquimia.Repository.Authentication
     /// <summary>
     /// Defines the <see cref="IUserRepository" />.
     /// </summary>
-    public interface IUserRepository : ISupportsSave<User, Guid>, IDao<User, Guid>, ISearchableDao<User, UserSearchFilter>
+    public interface IUserRepository : IRepositoryBase<User>, ISupportsDelete<User>, ISupportsSave<User, Guid>, ISearcheable<User , UserSearchFilter>
     {
         /// <summary>
         /// The FindByUsernameAndPasswordAsync.
@@ -43,20 +43,6 @@ namespace Auxquimia.Repository.Authentication
         /// <param name="enabled">The enabled<see cref="bool"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task ToggleEnabledUserAsync(Guid userId, bool enabled);
-
-        /// <summary>
-        /// The SearchHighUsers.
-        /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
-        /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
-        Task<Page<User>> SearchHighUsers(FindRequestImpl<UserSearchFilter> filter);
-
-        /// <summary>
-        /// The SearchForSelect.
-        /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
-        /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
-        Task<Page<User>> SearchForSelect(FindRequestImpl<UserSearchFilter> filter);
 
         /// <summary>
         /// The FindbyCode.

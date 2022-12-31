@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines the <see cref="RoleSearchFilter" />.
     /// </summary>
-    public class RoleSearchFilter
+    public class RoleSearchFilter : ISearchFilter
     {
         /// <summary>
         /// Gets or sets the Name.

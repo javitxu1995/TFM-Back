@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Auxquimia.Utils.MVC.Tools
+namespace Auxquimia.Filters
 {
-    public interface ISearchableDao<T, Guid>
+    public interface ISearchFilter
     {
-
     }
 }

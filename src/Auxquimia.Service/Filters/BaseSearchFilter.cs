@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines the <see cref="BaseSearchFilter" />.
     /// </summary>
-    public class BaseSearchFilter
+    public class BaseSearchFilter : ISearchFilter
     {
         /// <summary>
         /// Gets or sets the Name.

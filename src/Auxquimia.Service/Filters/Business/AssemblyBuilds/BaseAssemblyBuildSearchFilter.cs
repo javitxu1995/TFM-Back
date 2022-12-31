@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="BaseAssemblyBuildSearchFilter" />.
     /// </summary>
-    public class BaseAssemblyBuildSearchFilter
+    public class BaseAssemblyBuildSearchFilter : ISearchFilter
     {
         /// <summary>
         /// Gets or sets the AssemblyBuildNumber.

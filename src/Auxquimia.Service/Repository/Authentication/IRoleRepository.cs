@@ -3,13 +3,15 @@
     using Auxquimia.Filters.Authentication;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IRoleRepository" />.
     /// </summary>
-    interface IRoleRepository : IRepositoryBase<Role>
+    interface IRoleRepository : IRepositoryBase<Role>, ISupportsDelete<Role>, ISupportsSave<Role, Guid>, ISearcheable<Role, RoleSearchFilter>
+    {
     //ISupportsSave<Role, Guid>, IDao<Role, Guid>, ISearchableDao<Role, RoleSearchFilter>
     {
         /// <summary>

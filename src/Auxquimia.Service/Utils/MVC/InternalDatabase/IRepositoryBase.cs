@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Auxquimia.Utils.MVC.InternalDatabase
 {
-    public interface IRepositoryBase<T> : ISupportsDelete<T>, ISupportsSave<T, Guid>
-    {
+    public interface IRepositoryBase<T> { 
         Task<IList<T>> GetAllAsync();
         Task<T> GetAsync(Guid id);
     }

@@ -100,6 +100,22 @@
             await base.Save(entity).ConfigureAwait(false);
             return entity;
         }
+
+        public Task<IList<Role>> SearchByFilter(RoleSearchFilter filter)
+        {
+            if(filter == null)
+            {
+                throw new ArgumentNullException($"Role filter cannot be null");
+            }
+            IQueryOver<Role, Role> qo = _session.QueryOver<Role>();
+            if (!String.IsNullOrEmpty(filter.Name))
+            {
+                qo.And(Restrictions.On<Role>(x => x.Name).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
+            }
+
+            return qo.ListAsync();
+        }
+
         /// <summary>
         /// Update Async
         /// </summary>

@@ -3,6 +3,7 @@ namespace Auxquimia.Repository.Authentication
     using Auxquimia.Model.Authentication;
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using Izertis.Misc.Utils;
     using Izertis.NHibernate.Repositories;
     using Izertis.Paging.Abstractions;
@@ -15,14 +16,14 @@ namespace Auxquimia.Repository.Authentication
     /// <summary>
     /// Defines the <see cref="UserRepository" />.
     /// </summary>
-    internal class UserRepository : NHibernateRepository, IUserRepository
+    internal class UserRepository : RepositoryBase<User>, IUserRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">Service provider.</param>
         /// <param name="sessionFactoryProvider">Session factory provider.</param>
-        public UserRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public UserRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 

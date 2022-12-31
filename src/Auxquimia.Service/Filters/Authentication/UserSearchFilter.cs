@@ -1,11 +1,12 @@
 namespace Auxquimia.Service.Filters.Authentication
 {
+    using Auxquimia.Filters;
     using System;
 
     /// <summary>
     /// Search filter for users.
     /// </summary>
-    public class UserSearchFilter
+    public class UserSearchFilter : ISearchFilter
     {
         /// <summary>
         /// Gets or sets the Email.
