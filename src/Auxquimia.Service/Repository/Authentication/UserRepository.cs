@@ -31,7 +31,7 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>.</returns>
         public async Task<User> SaveAsync(User entity)
         {
-            await base.Save(entity).ConfigureAwait(false);
+            await base.SaveAsync(entity).ConfigureAwait(false);
             return entity;
         }
 
@@ -40,7 +40,7 @@ namespace Auxquimia.Repository.Authentication
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>.</returns>
-        public async override Task<User> Update(User entity)
+        public async override Task<User> UpdateAsync(User entity)
         {
             return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
@@ -123,7 +123,7 @@ namespace Auxquimia.Repository.Authentication
         {
             User user = await GetAsync(userId);
             user.AccountNonLocked = enabled;
-            await Update(user);
+            await UpdateAsync(user);
         }
 
         /// <summary>

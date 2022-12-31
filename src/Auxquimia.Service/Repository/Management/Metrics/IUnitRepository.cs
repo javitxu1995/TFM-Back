@@ -2,14 +2,15 @@
 {
     using Auxquimia.Filters;
     using Auxquimia.Model.Management.Metrics;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IUnitRepository" />.
     /// </summary>
-    interface IUnitRepository : ISupportsSave<Unit, Guid>, IDao<Unit, Guid>, ISearchableDao<Unit, BaseSearchFilter>
+    interface IUnitRepository : IRepositoryBase<Unit>, ISupportsSave<Unit, Guid>, ISearcheable<Unit, BaseSearchFilter>
     {
         /// <summary>
         /// The FindByCode.

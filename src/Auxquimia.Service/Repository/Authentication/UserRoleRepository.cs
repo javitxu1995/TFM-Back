@@ -94,7 +94,7 @@
         /// <returns>The <see cref="Task{UserRole}"/>.</returns>
         public async Task<UserRole> SaveAsync(UserRole entity)
         {
-            await base.Save(entity).ConfigureAwait(false);
+            await base.SaveAsync(entity).ConfigureAwait(false);
             return entity;
         }
 
@@ -105,7 +105,7 @@
             return qo.ListAsync();
         }
 
-        public override Task<UserRole> Update(UserRole entity)
+        public override Task<UserRole> UpdateAsync(UserRole entity)
         {
             throw new NotImplementedException();
         }

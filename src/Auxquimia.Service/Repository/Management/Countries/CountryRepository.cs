@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public Task<Country> GetAsync(Guid id)
+        public override Task<Country> GetAsync(Guid id)
         {
             Task<Country> result = _session.QueryOver<Country>().Where(x => x.Id == id).SingleOrDefaultAsync();
 
@@ -80,7 +80,7 @@
         /// <returns></returns>
         public async Task<Country> SaveAsync(Country entity)
         {
-            await base.Save(entity).ConfigureAwait(false);
+            await base.SaveAsync(entity).ConfigureAwait(false);
             return entity;
         }
 
@@ -89,9 +89,14 @@
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        public async Task<Country> UpdateAsync(Country entity)
+        public override async Task<Country> UpdateAsync(Country entity)
         {
             return await _session.MergeAsync(entity).ConfigureAwait(false);
+        }
+
+        public override Task<IList<Country>> GetAllAsync()
+        {
+            return GetAllAsync();
         }
     }
 }

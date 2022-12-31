@@ -7,8 +7,17 @@ namespace Auxquimia.Utils.MVC.Tools
 {
     public interface ISupportsSave<T, Guid>
     {
-        Task<T> Save(T entity);
-
-        Task<T> Update(T entity);
+        /// <summary>
+        /// Save async
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<T> SaveAsync(T entity);
+        /// <summary>
+        /// Update async
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<T> UpdateAsync(T entity);
     }
 }

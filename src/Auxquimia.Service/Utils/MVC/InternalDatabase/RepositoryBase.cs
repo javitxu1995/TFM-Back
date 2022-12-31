@@ -30,7 +30,7 @@ namespace Auxquimia.Utils.MVC.InternalDatabase
 
         //public abstract Task<T> Save(T entity);
 
-        public abstract Task<T> Update(T entity);
+        public abstract Task<T> UpdateAsync(T entity);
         //public Task Delete(T entity)
         //{
         //    return _session.DeleteAsync(entity);
@@ -45,7 +45,7 @@ namespace Auxquimia.Utils.MVC.InternalDatabase
         //    return _session.LoadAsync<T>(id);
         //}
 
-        public Task<T> Save(T entity)
+        public Task<T> SaveAsync(T entity)
         {
             //_session.SaveOrUpdate(entity);
             return (Task<T>)_session.SaveOrUpdateAsync(entity);

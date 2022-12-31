@@ -60,7 +60,7 @@
         /// <returns>The <see cref="Task{Role}"/>.</returns>
         public async Task<Role> SaveAsync(Role entity)
         {
-            await base.Save(entity).ConfigureAwait(false);
+            await base.SaveAsync(entity).ConfigureAwait(false);
             return entity;
         }
 
@@ -84,7 +84,7 @@
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override async Task<Role> Update(Role entity)
+        public override async Task<Role> UpdateAsync(Role entity)
         {
             return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
