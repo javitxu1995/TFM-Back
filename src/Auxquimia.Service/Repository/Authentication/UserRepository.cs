@@ -4,6 +4,7 @@ namespace Auxquimia.Repository.Authentication
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -40,7 +41,7 @@ namespace Auxquimia.Repository.Authentication
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>.</returns>
-        public async override Task<User> UpdateAsync(User entity)
+        public async Task<User> DeleteAsync(User entity)
         {
             return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
@@ -55,42 +56,6 @@ namespace Auxquimia.Repository.Authentication
             return _session.QueryOver<User>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
-        ///// <summary>
-        ///// Paginateds the asynchronous.
-        ///// </summary>
-        ///// <param name="filter">The filter.</param>
-        ///// <returns>.</returns>
-        //public Task<Page<User>> PaginatedAsync(FindRequestImpl<UserSearchFilter> filter)
-        //{
-        //    IQueryOver<User, User> qo = CurrentSession.QueryOver<User>();
-
-        //    if (filter.Filter != null)
-        //    {
-        //        UserSearchFilter uFilter = filter.Filter;
-
-        //        if (StringUtils.HasText(uFilter.Email))
-        //        {
-        //            qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(uFilter.Email, MatchMode.Anywhere));
-        //        }
-
-        //        if (StringUtils.HasText(uFilter.Name))
-        //        {
-        //            qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
-        //        }
-
-        //        if (uFilter.Enabled != null)
-        //        {
-        //            qo.And(x => x.AccountNonLocked == uFilter.Enabled);
-        //        }
-
-        //        if (uFilter.FactoryId != null)
-        //        {
-        //            qo.And(x => x.Factory != null).And(x => x.Factory.Id == uFilter.FactoryId);
-        //        }
-        //    }
-
-        //    return PaginatedAsync(qo, filter.PageRequest);
-        //}
 
         /// <summary>
         /// Finds the by username and password asynchronous.
@@ -272,10 +237,6 @@ namespace Auxquimia.Repository.Authentication
             return _session.QueryOver<User>().Where(x => x.Username == username && x.Factory.Id == factoryId).SingleOrDefaultAsync();
         }
 
-        public Task Delete(User entity)
-        {
-            return _session.DeleteAsync(entity);
-        }
 
         public Task<IList<User>> SearchByFilter(UserSearchFilter filter)
         {
@@ -313,9 +274,20 @@ namespace Auxquimia.Repository.Authentication
             return _session.QueryOver<User>().ListAsync();
         }
 
-        public Task<int> DeleteAsync(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            User entity = await GetAsync(id).ConfigureAwait(false);
+            if(entity != null)
+            {
+                await DeleteAsync(entity).ConfigureAwait(false);
+                return 1;
+            }
+            return 0;
+        }
+        public override async Task<User> UpdateAsync(User entity)
+        {
+            await _session.DeleteAsync(entity).ConfigureAwait(false);
+            return entity;
         }
     }
 }

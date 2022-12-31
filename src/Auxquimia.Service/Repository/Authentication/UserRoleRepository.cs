@@ -28,9 +28,10 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="UserRole"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public Task Delete(UserRole entity)
+        public async Task<UserRole> DeleteAsync(UserRole entity)
         {
-            return _session.DeleteAsync(entity);
+            await _session.DeleteAsync(entity).ConfigureAwait(false);
+            return entity;
         }
 
         /// <summary>
@@ -105,19 +106,15 @@
             return qo.ListAsync();
         }
 
-        public override Task<UserRole> UpdateAsync(UserRole entity)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// The UpdateAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="UserRole"/>.</param>
         /// <returns>The <see cref="Task{UserRole}"/>.</returns>
-        public async Task<UserRole> UpdateAsync(UserRole entity)
+        public async override Task<UserRole> UpdateAsync(UserRole entity)
         {
-            return await _session.MergeAsync(entity).ConfigureAwait(false);
+            await _session.MergeAsync(entity).ConfigureAwait(false);
+            return entity;
         }
     }
 }

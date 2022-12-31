@@ -77,7 +77,7 @@ namespace Auxquimia.Controllers
         }
 
         /// <summary>
-        /// The Delete
+        /// The DeleteAsync
         /// </summary>
         /// <param name="id">The id<see cref="int"/></param>
         [HttpDelete("{id}")]

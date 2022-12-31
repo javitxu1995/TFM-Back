@@ -87,9 +87,9 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="Unit"/>.</param>
         /// <returns>The <see cref="Task{Unit}"/>.</returns>
-        public override Task<Unit> UpdateAsync(Unit entity)
+        public override async Task<Unit> UpdateAsync(Unit entity)
         {
-            return _session.MergeAsync(entity);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
 
         public override Task<IList<Unit>> GetAllAsync()

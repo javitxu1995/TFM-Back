@@ -26,12 +26,12 @@ namespace Auxquimia.Utils.MVC.InternalDatabase
 
         public abstract Task<T> GetAsync(Guid id);
 
-        //public abstract Task Delete(T entity);
+        //public abstract Task DeleteAsync(T entity);
 
         //public abstract Task<T> Save(T entity);
 
         public abstract Task<T> UpdateAsync(T entity);
-        //public Task Delete(T entity)
+        //public Task DeleteAsync(T entity)
         //{
         //    return _session.DeleteAsync(entity);
         //}

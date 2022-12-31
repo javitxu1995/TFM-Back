@@ -204,7 +204,7 @@ namespace Auxquimia.Service.Authentication
                 actualRoles.Add(userRole.Role);
             }
 
-            // Delete no longer Reactors
+            // DeleteAsync no longer Reactors
             IList<Role> removedRoles = actualRoles;
             if (removedRoles.Any())
             {
@@ -219,7 +219,7 @@ namespace Auxquimia.Service.Authentication
 
 
 
-                    // Delete on BBDD
+                    // DeleteAsync on BBDD
                     UserRole deleteFactoryReactor = await userRoleRepository.GetByUserIdAndRoleId(destination.Id, role.Id).ConfigureAwait(false);
                     await userRoleRepository.DeleteAsync(deleteFactoryReactor).ConfigureAwait(false);
 

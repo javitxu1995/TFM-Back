@@ -731,7 +731,7 @@
             IList<NetsuiteFormulaStep> steps = source.Steps.PerformMapping<IList<NetsuiteFormulaStepDto>, IList<NetsuiteFormulaStep>>(); //Se pierden los lotes
             steps = steps ?? new List<NetsuiteFormulaStep>();
             IList<NetsuiteFormulaStep> actualSteps = destination.Steps ?? new List<NetsuiteFormulaStep>();
-            // Delete no longer Steps
+            // DeleteAsync no longer Steps
             IList<NetsuiteFormulaStep> removedSteps = actualSteps;
             if (removedSteps.Any())
             {

@@ -7,7 +7,7 @@ namespace Auxquimia.Utils.MVC.Tools
 {
     public interface ISupportsDelete<T>
     {
-        Task Delete(T entity);
+        Task<T> DeleteAsync(T entity);
         Task<int> DeleteAsync(Guid id);
     }
 }

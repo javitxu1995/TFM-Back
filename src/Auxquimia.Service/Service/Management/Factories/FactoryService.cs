@@ -156,7 +156,7 @@
             reactors = reactors ?? new List<Reactor>();
             IList<Reactor> actualReactors = destination.Reactors;
 
-            // Delete no longer Reactors
+            // DeleteAsync no longer Reactors
             IList<Reactor> removedReactors = actualReactors;
             if (removedReactors.Any())
             {
@@ -209,7 +209,7 @@
                 actualManagers.Add(factoryManager.Manager);
             }
 
-            // Delete no longer managers
+            // DeleteAsync no longer managers
             IList<User> removedManagers = actualManagers;
             if (removedManagers.Any())
             {

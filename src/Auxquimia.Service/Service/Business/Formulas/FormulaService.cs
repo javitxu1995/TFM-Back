@@ -170,7 +170,7 @@
             IList<FormulaStep> steps = source.Steps.PerformMapping<IList<FormulaStepDto>, IList<FormulaStep>>();
             steps = steps ?? new List<FormulaStep>();
             IList<FormulaStep> actualSteps = destination.Steps ?? new List<FormulaStep>();
-            // Delete no longer Steps
+            // DeleteAsync no longer Steps
             IList<FormulaStep> removedSteps = actualSteps;
             if (removedSteps.Any())
             {
