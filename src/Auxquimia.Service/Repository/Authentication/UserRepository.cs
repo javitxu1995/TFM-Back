@@ -4,9 +4,6 @@ namespace Auxquimia.Repository.Authentication
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -34,18 +31,8 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>.</returns>
         public async Task<User> SaveAsync(User entity)
         {
-            await base.SaveAsync(entity).ConfigureAwait(false);
+            await base.Save(entity).ConfigureAwait(false);
             return entity;
-        }
-
-        /// <summary>
-        /// Saves the asynchronous.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns>.</returns>
-        public async Task SaveAsync(IList<User> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -53,10 +40,9 @@ namespace Auxquimia.Repository.Authentication
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>.</returns>
-        public async Task<User> UpdateAsync(User entity)
+        public async override Task<User> Update(User entity)
         {
-            await base.UpdateAsync(entity).ConfigureAwait(false);
-            return entity;
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -64,66 +50,47 @@ namespace Auxquimia.Repository.Authentication
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>.</returns>
-        public Task<User> GetAsync(Guid id)
+        public override Task<User> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Id == id).SingleOrDefaultAsync();
+            return _session.QueryOver<User>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
-        /// <summary>
-        /// Gets all asynchronous.
-        /// </summary>
-        /// <returns>.</returns>
-        public Task<IList<User>> GetAllAsync()
-        {
-            return GetAllAsync<User>();
-        }
+        ///// <summary>
+        ///// Paginateds the asynchronous.
+        ///// </summary>
+        ///// <param name="filter">The filter.</param>
+        ///// <returns>.</returns>
+        //public Task<Page<User>> PaginatedAsync(FindRequestImpl<UserSearchFilter> filter)
+        //{
+        //    IQueryOver<User, User> qo = CurrentSession.QueryOver<User>();
 
-        /// <summary>
-        /// Paginateds the asynchronous.
-        /// </summary>
-        /// <param name="pageRequest">The page request.</param>
-        /// <returns>.</returns>
-        public Task<Page<User>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<User>(), pageRequest);
-        }
+        //    if (filter.Filter != null)
+        //    {
+        //        UserSearchFilter uFilter = filter.Filter;
 
-        /// <summary>
-        /// Paginateds the asynchronous.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        /// <returns>.</returns>
-        public Task<Page<User>> PaginatedAsync(FindRequestImpl<UserSearchFilter> filter)
-        {
-            IQueryOver<User, User> qo = CurrentSession.QueryOver<User>();
+        //        if (StringUtils.HasText(uFilter.Email))
+        //        {
+        //            qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(uFilter.Email, MatchMode.Anywhere));
+        //        }
 
-            if (filter.Filter != null)
-            {
-                UserSearchFilter uFilter = filter.Filter;
+        //        if (StringUtils.HasText(uFilter.Name))
+        //        {
+        //            qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
+        //        }
 
-                if (StringUtils.HasText(uFilter.Email))
-                {
-                    qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(uFilter.Email, MatchMode.Anywhere));
-                }
+        //        if (uFilter.Enabled != null)
+        //        {
+        //            qo.And(x => x.AccountNonLocked == uFilter.Enabled);
+        //        }
 
-                if (StringUtils.HasText(uFilter.Name))
-                {
-                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
-                }
+        //        if (uFilter.FactoryId != null)
+        //        {
+        //            qo.And(x => x.Factory != null).And(x => x.Factory.Id == uFilter.FactoryId);
+        //        }
+        //    }
 
-                if (uFilter.Enabled != null)
-                {
-                    qo.And(x => x.AccountNonLocked == uFilter.Enabled);
-                }
-
-                if (uFilter.FactoryId != null)
-                {
-                    qo.And(x => x.Factory != null).And(x => x.Factory.Id == uFilter.FactoryId);
-                }
-            }
-
-            return PaginatedAsync(qo, filter.PageRequest);
-        }
+        //    return PaginatedAsync(qo, filter.PageRequest);
+        //}
 
         /// <summary>
         /// Finds the by username and password asynchronous.
@@ -133,7 +100,7 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>.</returns>
         public Task<User> FindByUsernameAndPasswordAsync(string username, string password)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Username == username).And(x => x.Password == password).SingleOrDefaultAsync();
+            return _session.QueryOver<User>().Where(x => x.Username == username).And(x => x.Password == password).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -143,7 +110,7 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>.</returns>
         public Task<User> FindByUsernameAsync(string username)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Username == username).SingleOrDefaultAsync();
+            return _session.QueryOver<User>().Where(x => x.Username == username).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -156,7 +123,7 @@ namespace Auxquimia.Repository.Authentication
         {
             User user = await GetAsync(userId);
             user.AccountNonLocked = enabled;
-            await UpdateAsync(user);
+            await Update(user);
         }
 
         /// <summary>
@@ -164,19 +131,18 @@ namespace Auxquimia.Repository.Authentication
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
-        public Task<Page<User>> SearchHighUsers(FindRequestImpl<UserSearchFilter> filter)
+        public Task<IList<User>> SearchHighUsers(UserSearchFilter uFilter)
         {
             User userAlias = null;
             UserRole userRoleAlias = null;
             Role roleAlias = null;
 
-            IQueryOver<User, User> qo = CurrentSession.QueryOver(() => userAlias)
+            IQueryOver<User, User> qo = _session.QueryOver(() => userAlias)
                 .JoinEntityAlias(() => userRoleAlias, () => userRoleAlias.User.Id == userAlias.Id)
                 .JoinAlias(() => userRoleAlias.Role, () => roleAlias);
 
-            if (filter.Filter != null)
+            if (uFilter != null)
             {
-                UserSearchFilter uFilter = filter.Filter;
 
                 if (StringUtils.HasText(uFilter.Email))
                 {
@@ -202,7 +168,7 @@ namespace Auxquimia.Repository.Authentication
             qo.And(Restrictions.Where(() => roleAlias.AbSelectable));
 
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -213,7 +179,7 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>The <see cref="Task{User}"/>.</returns>
         public Task<IList<User>> FindbyCode(int code, Guid factoryId)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Code == code && x.Factory.Id == factoryId).ListAsync();
+            return _session.QueryOver<User>().Where(x => x.Code == code && x.Factory.Id == factoryId).ListAsync();
         }
 
         /// <summary>
@@ -225,7 +191,7 @@ namespace Auxquimia.Repository.Authentication
         public async Task<IList<User>> IsCodeAvailable(int code, Guid id = default(Guid))
         {
 
-            IQueryOver<User, User> qo = CurrentSession.QueryOver<User>();
+            IQueryOver<User, User> qo = _session.QueryOver<User>();
             if (id == default(Guid))
             {
                 qo.Where(x => x.Code == code); //New Operator
@@ -243,23 +209,22 @@ namespace Auxquimia.Repository.Authentication
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
-        public Task<Page<User>> SearchForSelect(FindRequestImpl<UserSearchFilter> filter)
+        public Task<IList<User>> SearchForSelect(UserSearchFilter filter)
         {
-            IQueryOver<User, User> qo = CurrentSession.QueryOver<User>();
+            IQueryOver<User, User> qo = _session.QueryOver<User>();
 
-            if (filter.Filter != null)
+            if (filter != null)
             {
-                UserSearchFilter uFilter = filter.Filter;
 
-                if (StringUtils.HasText(uFilter.Name))
+                if (StringUtils.HasText(filter.Name))
                 {
-                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere) ||
-                        Restrictions.On<User>(x => x.Name).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere) ||
-                        Restrictions.On<User>(x => x.Surname).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(filter.Name, MatchMode.Anywhere) ||
+                        Restrictions.On<User>(x => x.Name).IsInsensitiveLike(filter.Name, MatchMode.Anywhere) ||
+                        Restrictions.On<User>(x => x.Surname).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
                 }
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -269,7 +234,7 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>The <see cref="Task{User}"/>.</returns>
         public Task<User> FindByEmailAsync(string email)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Email == email && x.Enabled).SingleOrDefaultAsync();
+            return _session.QueryOver<User>().Where(x => x.Email == email && x.Enabled).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -280,7 +245,7 @@ namespace Auxquimia.Repository.Authentication
         public Task<User> FindByPasswordToken(Guid token)
         {
             long today = DateHelper.GetTodayUnixTimeMilliseconds();
-            return CurrentSession.QueryOver<User>().Where(x => x.PasswordToken == token && x.PasswordTokenExpiration >= today && x.Enabled).SingleOrDefaultAsync();
+            return _session.QueryOver<User>().Where(x => x.PasswordToken == token && x.PasswordTokenExpiration >= today && x.Enabled).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -304,7 +269,53 @@ namespace Auxquimia.Repository.Authentication
         /// <returns>The <see cref="Task{User}"/>.</returns>
         public Task<User> FindByUsernameAndFactoryAsyncWithSession(ISession session, string username, Guid factoryId)
         {
-            return session.QueryOver<User>().Where(x => x.Username == username && x.Factory.Id == factoryId).SingleOrDefaultAsync();
+            return _session.QueryOver<User>().Where(x => x.Username == username && x.Factory.Id == factoryId).SingleOrDefaultAsync();
+        }
+
+        public Task Delete(User entity)
+        {
+            return _session.DeleteAsync(entity);
+        }
+
+        public Task<IList<User>> SearchByFilter(UserSearchFilter filter)
+        {
+            IQueryOver<User, User> qo = _session.QueryOver<User>();
+
+            if (filter != null)
+            {
+
+                if (StringUtils.HasText(filter.Email))
+                {
+                    qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(filter.Email, MatchMode.Anywhere));
+                }
+
+                if (StringUtils.HasText(filter.Name))
+                {
+                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
+                }
+
+                if (filter.Enabled != null)
+                {
+                    qo.And(x => x.AccountNonLocked == filter.Enabled);
+                }
+
+                if (filter.FactoryId != null)
+                {
+                    qo.And(x => x.Factory != null).And(x => x.Factory.Id == filter.FactoryId);
+                }
+            }
+
+            return qo.ListAsync();
+        }
+
+        public override Task<IList<User>> GetAllAsync()
+        {
+            return _session.QueryOver<User>().ListAsync();
+        }
+
+        public Task<int> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

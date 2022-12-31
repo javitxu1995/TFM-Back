@@ -23,11 +23,6 @@
         {
         }
 
-        public override Task Delete(Role entity)
-        {
-            return _session.DeleteAsync(entity);
-        }
-
         /// <summary>
         /// The GetAllAsync.
         /// </summary>
@@ -56,38 +51,6 @@
         {
             return _session.QueryOver<Role>().Where(x => x.Name == name).SingleOrDefaultAsync();
         }
-
-        ///// <summary>
-        ///// The PaginatedAsync.
-        ///// </summary>
-        ///// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        ///// <returns>The <see cref="Task{Page{Role}}"/>.</returns>
-        //public Task<Page<Role>> PaginatedAsync(PageRequest pageRequest)
-        //{
-        //    return PaginatedAsync(CurrentSession.QueryOver<Role>(), pageRequest);
-        //}
-
-        ///// <summary>
-        ///// The PaginatedAsync.
-        ///// </summary>
-        ///// <param name="filter">The filter<see cref="FindRequestImpl{RoleSearchFilter}"/>.</param>
-        ///// <returns>The <see cref="Task{Page{Role}}"/>.</returns>
-        //public Task<Page<Role>> PaginatedAsync(FindRequestImpl<RoleSearchFilter> filter)
-        //{
-        //    IQueryOver<Role, Role> qo = CurrentSession.QueryOver<Role>();
-
-        //    if (filter.Filter != null)
-        //    {
-        //        RoleSearchFilter uFilter = filter.Filter;
-
-        //        if (StringUtils.HasText(uFilter.Name))
-        //        {
-        //            qo.And(Restrictions.On<Role>(x => x.Name).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
-        //        }
-        //    }
-
-        //    return PaginatedAsync(qo, filter.PageRequest);
-        //}
 
 
         /// <summary>

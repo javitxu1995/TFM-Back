@@ -2,8 +2,7 @@
 {
     using Auxquimia.Filters.Authentication;
     using Auxquimia.Model.Authentication;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -13,14 +12,14 @@
     /// <summary>
     /// Defines the <see cref="UserRoleRepository" />.
     /// </summary>
-    internal class UserRoleRepository : NHibernateRepository, IUserRoleRepository
+    internal class UserRoleRepository : RepositoryBase<UserRole>, IUserRoleRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRoleRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
         /// <param name="sessionFactoryProvider">The sessionFactoryProvider<see cref="IFluentNhibernateLocalSessionFactoryProvider"/>.</param>
-        public UserRoleRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public UserRoleRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 
@@ -29,9 +28,9 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="UserRole"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public Task DeleteAsync(UserRole entity)
+        public Task Delete(UserRole entity)
         {
-            return CurrentSession.DeleteAsync(entity);
+            return _session.DeleteAsync(entity);
         }
 
         /// <summary>
@@ -41,7 +40,7 @@
         /// <returns>The <see cref="Task{int}"/>.</returns>
         public Task<int> DeleteAsync(Guid id)
         {
-            IQuery query = CurrentSession.CreateQuery("delete M_USER_ROLE where Id = :id");
+            IQuery query = _session.CreateQuery("delete M_USER_ROLE where Id = :id");
             query.SetGuid("id", id);
 
             return query.ExecuteUpdateAsync();
@@ -51,9 +50,9 @@
         /// The GetAllAsync.
         /// </summary>
         /// <returns>The <see cref="Task{IList{UserRole}}"/>.</returns>
-        public Task<IList<UserRole>> GetAllAsync()
+        public override Task<IList<UserRole>> GetAllAsync()
         {
-            return GetAllAsync<UserRole>();
+            return _session.QueryOver<UserRole>().ListAsync();
         }
 
         /// <summary>
@@ -61,9 +60,9 @@
         /// </summary>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{UserRole}"/>.</returns>
-        public Task<UserRole> GetAsync(Guid id)
+        public override Task<UserRole> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<UserRole>().Where(x => x.Id == id).SingleOrDefaultAsync();
+            return _session.QueryOver<UserRole>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -78,7 +77,7 @@
             User userAlias = null;
             Role roleAlias = null;
 
-            IQueryOver<UserRole, UserRole> qo = CurrentSession.QueryOver(() => userRoleAlias)
+            IQueryOver<UserRole, UserRole> qo = _session.QueryOver(() => userRoleAlias)
                 .JoinAlias(() => userRoleAlias.User, () => userAlias)
                 .JoinAlias(() => userRoleAlias.Role, () => roleAlias)
                 .Where(() => userAlias.Id == userId && roleAlias.Id == roleId);
@@ -86,27 +85,7 @@
             return qo.SingleOrDefaultAsync();
         }
 
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{UserRole}}"/>.</returns>
-        public Task<Page<UserRole>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<UserRole>(), pageRequest);
-        }
 
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{RoleSearchFilter}"/>.</param>
-        /// <returns>The <see cref="Task{Page{UserRole}}"/>.</returns>
-        public Task<Page<UserRole>> PaginatedAsync(FindRequestImpl<RoleSearchFilter> filter)
-        {
-            IQueryOver<UserRole, UserRole> qo = CurrentSession.QueryOver<UserRole>();
-
-            return PaginatedAsync(qo, filter.PageRequest);
-        }
 
         /// <summary>
         /// The SaveAsync.
@@ -115,18 +94,20 @@
         /// <returns>The <see cref="Task{UserRole}"/>.</returns>
         public async Task<UserRole> SaveAsync(UserRole entity)
         {
-            await base.SaveAsync(entity).ConfigureAwait(false);
+            await base.Save(entity).ConfigureAwait(false);
             return entity;
         }
 
-        /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{UserRole}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveAsync(IList<UserRole> entity)
+        public Task<IList<UserRole>> SearchByFilter(RoleSearchFilter filter)
         {
-            await SaveAllAsync(entity).ConfigureAwait(false);
+            IQueryOver<UserRole, UserRole> qo = _session.QueryOver<UserRole>();
+
+            return qo.ListAsync();
+        }
+
+        public override Task<UserRole> Update(UserRole entity)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -136,7 +117,7 @@
         /// <returns>The <see cref="Task{UserRole}"/>.</returns>
         public async Task<UserRole> UpdateAsync(UserRole entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
     }
 }

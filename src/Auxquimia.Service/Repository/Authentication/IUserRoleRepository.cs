@@ -2,14 +2,16 @@
 {
     using Auxquimia.Filters.Authentication;
     using Auxquimia.Model.Authentication;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IUserRoleRepository" />.
     /// </summary>
-    interface IUserRoleRepository : ISupportsSave<UserRole, Guid>, IDao<UserRole, Guid>, ISearchableDao<UserRole, RoleSearchFilter>, ISupportsDelete<UserRole, Guid>
+    interface IUserRoleRepository : IRepositoryBase<UserRole>, ISupportsDelete<UserRole>, ISupportsSave<UserRole, Guid>, ISearcheable<UserRole, RoleSearchFilter>
+    //ISupportsSave<UserRole, Guid>, IDao<UserRole, Guid>, ISearchableDao<UserRole, RoleSearchFilter>, ISupportsDelete<UserRole, Guid>
     {
         /// <summary>
         /// The GetByUserIdAndRoleId.
