@@ -2,17 +2,16 @@
 {
     using Auxquimia.Model.Management.Countries;
     using Auxquimia.Service.Filters.Management.Countries;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    internal class CountryRepository : NHibernateRepository, ICountryRepository
+    internal class CountryRepository : RepositoryBase<Country>, ICountryRepository
     {
-        public CountryRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public CountryRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
         
@@ -23,7 +22,7 @@
         /// <returns></returns>
         public Task<Country> FindByIsoNameAsync(string isoName)
         {
-            return CurrentSession.QueryOver<Country>().Where(x => x.IsoName == isoName).SingleOrDefaultAsync();
+            return _session.QueryOver<Country>().Where(x => x.IsoName == isoName).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -33,16 +32,7 @@
         /// <returns></returns>
         public Task<Country> FindByNameAsync(string name)
         {
-            return CurrentSession.QueryOver<Country>().Where(x => x.Name == name).SingleOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Gets all asynchronous.
-        /// </summary>
-        /// <returns></returns>
-        public Task<IList<Country>> GetAllAsync()
-        {
-            return GetAllAsync<Country>();
+            return _session.QueryOver<Country>().Where(x => x.Name == name).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -52,7 +42,7 @@
         /// <returns></returns>
         public Task<Country> GetAsync(Guid id)
         {
-            Task<Country> result = CurrentSession.QueryOver<Country>().Where(x => x.Id == id).SingleOrDefaultAsync();
+            Task<Country> result = _session.QueryOver<Country>().Where(x => x.Id == id).SingleOrDefaultAsync();
 
             return result;
         }
@@ -60,38 +50,27 @@
         /// <summary>
         /// Paginateds the asynchronous.
         /// </summary>
-        /// <param name="pageRequest">The page request.</param>
-        /// <returns></returns>
-        public Task<Page<Country>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<Country>(), pageRequest);
-        }
-
-        /// <summary>
-        /// Paginateds the asynchronous.
-        /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        public Task<Page<Country>> PaginatedAsync(FindRequestImpl<CountrySearchFilter> filter)
+        public Task<IList<Country>> SearchByFilter(CountrySearchFilter filter)
         {
-            IQueryOver<Country, Country> qo = CurrentSession.QueryOver<Country>();
+            IQueryOver<Country, Country> qo = _session.QueryOver<Country>();
 
-            if (filter.Filter != null)
+            if (filter != null)
             {
-                CountrySearchFilter uFilter = filter.Filter;
 
-                if (StringUtils.HasText(uFilter.Name))
+                if (StringUtils.HasText(filter.Name))
                 {
-                    qo.And(Restrictions.On<Country>(x => x.Name).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<Country>(x => x.Name).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
                 }
 
-                if (StringUtils.HasText(uFilter.IsoName))
+                if (StringUtils.HasText(filter.IsoName))
                 {
-                    qo.And(Restrictions.On<Country>(x => x.IsoName).IsInsensitiveLike(uFilter.IsoName, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<Country>(x => x.IsoName).IsInsensitiveLike(filter.IsoName, MatchMode.Anywhere));
                 }
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -101,18 +80,8 @@
         /// <returns></returns>
         public async Task<Country> SaveAsync(Country entity)
         {
-            await base.SaveAsync(entity).ConfigureAwait(false);
+            await base.Save(entity).ConfigureAwait(false);
             return entity;
-        }
-
-        /// <summary>
-        /// Saves the asynchronous.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        public async Task SaveAsync(IList<Country> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -122,7 +91,7 @@
         /// <returns></returns>
         public async Task<Country> UpdateAsync(Country entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
     }
 }

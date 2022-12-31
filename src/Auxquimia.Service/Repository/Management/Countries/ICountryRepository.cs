@@ -2,11 +2,13 @@
 {
     using Auxquimia.Model.Management.Countries;
     using Auxquimia.Service.Filters.Management.Countries;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using System;
     using System.Threading.Tasks;
 
-    interface ICountryRepository : ISupportsSave<Country, Guid>, IDao<Country, Guid>, ISearchableDao<Country, CountrySearchFilter>
+    interface ICountryRepository : IRepositoryBase<Country>, ISupportsSave<Country, Guid>, ISearcheable<Country, CountrySearchFilter>
+ 
     {
         /// <summary>
         /// Finds the by iso name asynchronous.
