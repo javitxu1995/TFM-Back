@@ -2,6 +2,7 @@
 {
     using Auxquimia.Enums;
     using Auxquimia.Exceptions;
+    using Auxquimia.Filters;
     using Auxquimia.Filters.Business.AssemblyBuilds;
     using Auxquimia.Model.Business.AssemblyBuilds;
     using Auxquimia.Utils;
@@ -141,13 +142,13 @@
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Task<IList<AssemblyBuild>> SearchByFilter(BaseAssemblyBuildSearchFilter filter)
+        public Task<IList<AssemblyBuild>> SearchByFilter(FindRequestImpl<BaseAssemblyBuildSearchFilter> filter)
         {
             IQueryOver<AssemblyBuild, AssemblyBuild> qo = _session.QueryOver<AssemblyBuild>();
 
-            if (filter != null)
+            if (filter != null && filter.Filter != null)
             {
-                qo = ConstructQueryWithFilter(qo, filter);
+                qo = ConstructQueryWithFilter(qo, filter.Filter);
             }
 
             return qo.ListAsync();

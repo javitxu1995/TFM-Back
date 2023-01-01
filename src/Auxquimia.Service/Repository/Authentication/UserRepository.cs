@@ -1,5 +1,6 @@
 namespace Auxquimia.Repository.Authentication
 {
+    using Auxquimia.Filters;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils;
@@ -238,31 +239,31 @@ namespace Auxquimia.Repository.Authentication
         }
 
 
-        public Task<IList<User>> SearchByFilter(UserSearchFilter filter)
+        public Task<IList<User>> SearchByFilter(FindRequestImpl<UserSearchFilter> filter)
         {
             IQueryOver<User, User> qo = _session.QueryOver<User>();
 
-            if (filter != null)
+            if (filter != null && filter.Filter != null)
             {
-
-                if (StringUtils.HasText(filter.Email))
+                UserSearchFilter uFilter = filter.Filter;
+                if (StringUtils.HasText(uFilter.Email))
                 {
-                    qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(filter.Email, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(uFilter.Email, MatchMode.Anywhere));
                 }
 
-                if (StringUtils.HasText(filter.Name))
+                if (StringUtils.HasText(uFilter.Name))
                 {
-                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
                 }
 
-                if (filter.Enabled != null)
+                if (uFilter.Enabled != null)
                 {
-                    qo.And(x => x.AccountNonLocked == filter.Enabled);
+                    qo.And(x => x.AccountNonLocked == uFilter.Enabled);
                 }
 
-                if (filter.FactoryId != null)
+                if (uFilter.FactoryId != null)
                 {
-                    qo.And(x => x.Factory != null).And(x => x.Factory.Id == filter.FactoryId);
+                    qo.And(x => x.Factory != null).And(x => x.Factory.Id == uFilter.FactoryId);
                 }
             }
 

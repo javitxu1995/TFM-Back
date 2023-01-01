@@ -1,5 +1,6 @@
 ﻿namespace Auxquimia.Repository.Management.Countries
 {
+    using Auxquimia.Filters;
     using Auxquimia.Model.Management.Countries;
     using Auxquimia.Service.Filters.Management.Countries;
     using Auxquimia.Utils;
@@ -52,21 +53,21 @@
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        public Task<IList<Country>> SearchByFilter(CountrySearchFilter filter)
+        public Task<IList<Country>> SearchByFilter(FindRequestImpl<CountrySearchFilter> filter)
         {
             IQueryOver<Country, Country> qo = _session.QueryOver<Country>();
 
-            if (filter != null)
+            if (filter != null && filter.Filter != null)
             {
-
-                if (StringUtils.HasText(filter.Name))
+                CountrySearchFilter uFilter = filter.Filter;
+                if (StringUtils.HasText(uFilter.Name))
                 {
-                    qo.And(Restrictions.On<Country>(x => x.Name).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<Country>(x => x.Name).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
                 }
 
-                if (StringUtils.HasText(filter.IsoName))
+                if (StringUtils.HasText(uFilter.IsoName))
                 {
-                    qo.And(Restrictions.On<Country>(x => x.IsoName).IsInsensitiveLike(filter.IsoName, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<Country>(x => x.IsoName).IsInsensitiveLike(uFilter.IsoName, MatchMode.Anywhere));
                 }
             }
 

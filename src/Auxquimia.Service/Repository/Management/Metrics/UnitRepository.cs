@@ -39,22 +39,21 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Unit}}"/>.</returns>
-        public Task<IList<Unit>> SearchByFilter(BaseSearchFilter filter)
+        public Task<IList<Unit>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
             IQueryOver<Unit, Unit> qo = _session.QueryOver<Unit>();
 
-            if (filter != null)
+            if (filter != null && filter.Filter != null)
             {
-
-                if (StringUtils.HasText(filter.Code))
+                BaseSearchFilter uFilter = filter.Filter;
+                if (StringUtils.HasText(uFilter.Code))
                 {
-                    qo.And(Restrictions.On<Unit>(x => x.Code).IsInsensitiveLike(filter.Code, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<Unit>(x => x.Code).IsInsensitiveLike(uFilter.Code, MatchMode.Anywhere));
                 }
-                if (StringUtils.HasText(filter.Name))
+                if (StringUtils.HasText(uFilter.Name))
                 {
-                    qo.And(Restrictions.On<Unit>(x => x.Name).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<Unit>(x => x.Name).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
                 }
-
             }
 
             return qo.ListAsync();
