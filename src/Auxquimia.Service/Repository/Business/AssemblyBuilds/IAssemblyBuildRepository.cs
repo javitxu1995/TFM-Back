@@ -2,8 +2,8 @@
 {
     using Auxquimia.Filters.Business.AssemblyBuilds;
     using Auxquimia.Model.Business.AssemblyBuilds;
-    using Izertis.Interfaces.Abstractions;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,9 @@
     /// <summary>
     /// Defines the <see cref="IAssemblyBuildRepository" />.
     /// </summary>
-    public interface IAssemblyBuildRepository : ISupportsSave<AssemblyBuild, Guid>, IDao<AssemblyBuild, Guid>, ISearchableDao<AssemblyBuild, BaseAssemblyBuildSearchFilter>
+
+    public interface IAssemblyBuildRepository : IRepositoryBase<AssemblyBuild>, ISupportsSave<AssemblyBuild, Guid>, ISearcheable<AssemblyBuild, BaseAssemblyBuildSearchFilter>
+        //ISupportsSave<AssemblyBuild, Guid>, IDao<AssemblyBuild, Guid>, ISearchableDao<AssemblyBuild, BaseAssemblyBuildSearchFilter>
     {
         /// <summary>
         /// The Get TotallWoByStatus.
@@ -26,7 +28,7 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuild}}"/>.</returns>
-        Task<Page<AssemblyBuild>> GetByMultipleStatus(FindRequestImpl<BaseAssemblyBuildSearchFilter> filter);
+        Task<IList<AssemblyBuild>> GetByMultipleStatus(BaseAssemblyBuildSearchFilter filter);
 
         /// <summary>
         /// The GetToWaitingQueueAsync.

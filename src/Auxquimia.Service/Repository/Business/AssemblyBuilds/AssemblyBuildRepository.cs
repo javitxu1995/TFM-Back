@@ -4,9 +4,8 @@
     using Auxquimia.Exceptions;
     using Auxquimia.Filters.Business.AssemblyBuilds;
     using Auxquimia.Model.Business.AssemblyBuilds;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -16,14 +15,14 @@
     /// <summary>
     /// Defines the <see cref="AssemblyBuildRepository" />.
     /// </summary>
-    internal class AssemblyBuildRepository : NHibernateRepository, IAssemblyBuildRepository
+    internal class AssemblyBuildRepository : RepositoryBase<AssemblyBuild>, IAssemblyBuildRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyBuildRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
         /// <param name="sessionFactoryProvider">The sessionFactoryProvider<see cref="IFluentNhibernateLocalSessionFactoryProvider"/>.</param>
-        public AssemblyBuildRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public AssemblyBuildRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 
@@ -31,18 +30,18 @@
         /// The GetAllAsync.
         /// </summary>
         /// <returns>The <see cref="Task{IList{AssemblyBuild}}"/>.</returns>
-        public Task<IList<AssemblyBuild>> GetAllAsync()
+        public override Task<IList<AssemblyBuild>> GetAllAsync()
         {
-            return GetAllAsync<AssemblyBuild>();
+            return _session.QueryOver<AssemblyBuild>().ListAsync();
         }
 
         /// <summary>
         /// The GetAssembliesToNetsuite.
         /// </summary>
         /// <returns>The <see cref="Task{IList{AssemblyBuild}}"/>.</returns>
-        public async Task<IList<AssemblyBuild>> GetAssembliesToNetsuite()
+        public Task<IList<AssemblyBuild>> GetAssembliesToNetsuite()
         {
-            return CurrentSession.QueryOver<AssemblyBuild>().Where(x => x.Status == ABStatus.FINISHED && !x.NetsuiteWritted && x.NetsuiteFormula != null && x.Formula == null).List();
+            return _session.QueryOver<AssemblyBuild>().Where(x => x.Status == ABStatus.FINISHED && !x.NetsuiteWritted && x.NetsuiteFormula != null && x.Formula == null).ListAsync();
         }
 
         /// <summary>
@@ -50,29 +49,28 @@
         /// </summary>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuild}"/>.</returns>
-        public Task<AssemblyBuild> GetAsync(Guid id)
+        public override Task<AssemblyBuild> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<AssemblyBuild>().Where(x => x.Id == id).SingleOrDefaultAsync();
+            return _session.QueryOver<AssemblyBuild>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
         /// <summary>
-        /// The GetByMultipleStatus.
+        /// Gets by multiple status
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseAssemblyBuildSearchFilter}"/>.</param>
-        /// <returns>The <see cref="Task{Page{AssemblyBuild}}"/>.</returns>
-        public Task<Page<AssemblyBuild>> GetByMultipleStatus(FindRequestImpl<BaseAssemblyBuildSearchFilter> filter)
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Task<IList<AssemblyBuild>> GetByMultipleStatus(BaseAssemblyBuildSearchFilter filter)
         {
-            IQueryOver<AssemblyBuild, AssemblyBuild> qo = CurrentSession.QueryOver<AssemblyBuild>();
-            if (filter.Filter != null)
+            IQueryOver<AssemblyBuild, AssemblyBuild> qo = _session.QueryOver<AssemblyBuild>();
+            if (filter != null)
             {
-                BaseAssemblyBuildSearchFilter uFilter = filter.Filter;
-                qo.And(x => x.Status.IsIn(uFilter.MultipleStatusQuery));
+                qo.And(x => x.Status.IsIn(filter.MultipleStatusQuery));
 
-                qo = ConstructQueryWithFilter(qo, uFilter);
+                qo = ConstructQueryWithFilter(qo, filter);
             }
 
 
-            return PaginatedAsync<AssemblyBuild>(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -82,12 +80,12 @@
         /// <returns>The <see cref="AssemblyBuild"/>.</returns>
         public AssemblyBuild GetSync(Guid assemblyId)
         {
-            return CurrentSession.QueryOver<AssemblyBuild>().Where(x => x.Id == assemblyId).SingleOrDefault();
+            return _session.QueryOver<AssemblyBuild>().Where(x => x.Id == assemblyId).SingleOrDefault();
         }
 
         public Task<AssemblyBuild> GetToWaitingQueueAsync(Guid id)
         {
-            return CurrentSession.QueryOver<AssemblyBuild>()
+            return _session.QueryOver<AssemblyBuild>()
                .Where(x =>
                x.Id == id
                && x.Status == ABStatus.PENDING
@@ -105,7 +103,7 @@
         /// <returns>The <see cref="Task{AssemblyBuild}"/>.</returns>
         public Task<AssemblyBuild> GetToProductionAsync(Guid id)
         {
-            return CurrentSession.QueryOver<AssemblyBuild>()
+            return _session.QueryOver<AssemblyBuild>()
                 .Where(x =>
                 x.Id == id
                 && x.Status == ABStatus.WAITING
@@ -123,7 +121,7 @@
         /// <returns>The <see cref="int"/>.</returns>
         public int GetTotalWoByStatus(BaseAssemblyBuildSearchFilter filter)
         {
-            IQueryOver<AssemblyBuild, AssemblyBuild> qo = CurrentSession.QueryOver<AssemblyBuild>();
+            IQueryOver<AssemblyBuild, AssemblyBuild> qo = _session.QueryOver<AssemblyBuild>();
             if (filter.Status == null)
             {
                 throw new CustomException("ERROR STATUS NULL.");
@@ -139,32 +137,20 @@
         }
 
         /// <summary>
-        /// The PaginatedAsync.
+        /// Search on Assembly Build by filter
         /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{AssemblyBuild}}"/>.</returns>
-        public Task<Page<AssemblyBuild>> PaginatedAsync(PageRequest pageRequest)
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Task<IList<AssemblyBuild>> SearchByFilter(BaseAssemblyBuildSearchFilter filter)
         {
-            return PaginatedAsync(CurrentSession.QueryOver<AssemblyBuild>(), pageRequest);
-        }
+            IQueryOver<AssemblyBuild, AssemblyBuild> qo = _session.QueryOver<AssemblyBuild>();
 
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseAssemblyBuildSearchFilter}"/>.</param>
-        /// <returns>The <see cref="Task{Page{AssemblyBuild}}"/>.</returns>
-        public Task<Page<AssemblyBuild>> PaginatedAsync(FindRequestImpl<BaseAssemblyBuildSearchFilter> filter)
-        {
-            IQueryOver<AssemblyBuild, AssemblyBuild> qo = CurrentSession.QueryOver<AssemblyBuild>();
-
-            if (filter.Filter != null)
+            if (filter != null)
             {
-                BaseAssemblyBuildSearchFilter uFilter = filter.Filter;
-                qo = ConstructQueryWithFilter(qo, uFilter);
-
+                qo = ConstructQueryWithFilter(qo, filter);
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -210,23 +196,13 @@
         }
 
         /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{AssemblyBuild}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveAsync(IList<AssemblyBuild> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// The UpdateAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="AssemblyBuild"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuild}"/>.</returns>
-        public async Task<AssemblyBuild> UpdateAsync(AssemblyBuild entity)
+        public async override Task<AssemblyBuild> UpdateAsync(AssemblyBuild entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -271,7 +247,7 @@
         /// <returns>The <see cref="Task{IList{AssemblyBuild}}"/>.</returns>
         public Task<IList<AssemblyBuild>> FindAssembliesWaitingToProduction(Guid reactorId)
         {
-            return CurrentSession.QueryOver<AssemblyBuild>().Where(x =>
+            return _session.QueryOver<AssemblyBuild>().Where(x =>
             x.Status == ABStatus.WAITING
             && x.Blender.Id == reactorId
             ).OrderBy(x => x.Deadline).Asc.ListAsync();
@@ -284,7 +260,7 @@
         /// <returns>The <see cref="Task{IList{AssemblyBuild}}"/>.</returns>
         public Task<IList<AssemblyBuild>> CheckAssembliesOnProduction(Guid reactorId)
         {
-            return CurrentSession.QueryOver<AssemblyBuild>().Where(x =>
+            return _session.QueryOver<AssemblyBuild>().Where(x =>
              x.Status == ABStatus.PROGRESS
              && x.Blender.Id == reactorId
              ).ListAsync();
