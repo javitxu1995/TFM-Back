@@ -1,6 +1,7 @@
 ﻿namespace Auxquimia.Repository.Business.Formulas
 {
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
@@ -46,9 +47,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{NetsuiteFormula}}"/>.</returns>
-        public new Task<IList<NetsuiteFormula>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
+        public new Task<IList<NetsuiteFormula>> SearchByFilter(FindRequestDto<BaseSearchFilter> filter)
         {
             IQueryOver<NetsuiteFormula, NetsuiteFormula> qo = _session.QueryOver<NetsuiteFormula>();
 

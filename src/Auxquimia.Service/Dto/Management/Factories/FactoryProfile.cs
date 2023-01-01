@@ -3,6 +3,7 @@
     using AutoMapper;
     using Auxquimia.Dto.Management.Countries;
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Management.Factories;
     using Auxquimia.Repository.Management.Factories;
     using Auxquimia.Utils;
@@ -23,7 +24,7 @@
         {
 
             // Base search filter
-            CreateMap<FindRequestDto<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
+            CreateMap<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
 
             // Reactor
             CreateMap<Reactor, ReactorDto>();

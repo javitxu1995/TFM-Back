@@ -1,6 +1,6 @@
 namespace Auxquimia.Repository.Authentication
 {
-    using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils;
@@ -95,7 +95,7 @@ namespace Auxquimia.Repository.Authentication
         /// <summary>
         /// The SearchHighUsers.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
         public Task<IList<User>> SearchHighUsers(UserSearchFilter uFilter)
         {
@@ -173,7 +173,7 @@ namespace Auxquimia.Repository.Authentication
         /// <summary>
         /// The SearchForSelect.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
         public Task<IList<User>> SearchForSelect(UserSearchFilter filter)
         {
@@ -239,7 +239,7 @@ namespace Auxquimia.Repository.Authentication
         }
 
 
-        public Task<IList<User>> SearchByFilter(FindRequestImpl<UserSearchFilter> filter)
+        public Task<IList<User>> SearchByFilter(FindRequestDto<UserSearchFilter> filter)
         {
             IQueryOver<User, User> qo = _session.QueryOver<User>();
 

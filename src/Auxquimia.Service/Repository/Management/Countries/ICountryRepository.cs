@@ -4,10 +4,11 @@
     using Auxquimia.Service.Filters.Management.Countries;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using System;
     using System.Threading.Tasks;
 
-    interface ICountryRepository : IRepositoryBase<Country>, ISupportsSave<Country, Guid>, ISearcheable<Country, CountrySearchFilter>
+    interface ICountryRepository : IRepositoryBase<Country>, ISupportsSave<Country, Guid>, ISearcheableRepository<Country, CountrySearchFilter>
  
     {
         /// <summary>

@@ -2,14 +2,15 @@
 {
     using Auxquimia.Dto.Authentication;
     using Auxquimia.Filters.Authentication;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Servs;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IRoleService" />.
     /// </summary>
-    public interface IRoleService : IService<RoleDto, Guid>, ISupportsSave<RoleDto, Guid>, ISearchableService<RoleDto, RoleSearchFilter>
+    public interface IRoleService : IService<RoleDto, Guid>, ISupportsSave<RoleDto, Guid>, ISearcheableRepository<RoleDto, RoleSearchFilter>
     {
         /// <summary>
         /// The getAdminRole.

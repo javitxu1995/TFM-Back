@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Auxquimia.Filters
+namespace Auxquimia.Filters.FindRequests
 {
 
-    public class FindRequestImpl<T> where T : ISearchFilter
+    public class FindRequestDto<T> : IFindRequest where T : ISearchFilter
     {
         public T Filter { get; set; }
     }

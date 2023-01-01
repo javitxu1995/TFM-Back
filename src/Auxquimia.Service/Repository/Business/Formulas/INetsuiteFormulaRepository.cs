@@ -4,6 +4,7 @@
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using NHibernate;
     using System;
     using System.Threading.Tasks;
@@ -11,7 +12,7 @@
     /// <summary>
     /// Defines the <see cref="INetsuiteFormulaRepository" />.
     /// </summary>
-    public interface INetsuiteFormulaRepository : IRepositoryBase<NetsuiteFormula>, ISupportsSave<NetsuiteFormula, Guid>, ISearcheable<NetsuiteFormula, BaseSearchFilter>
+    public interface INetsuiteFormulaRepository : IRepositoryBase<NetsuiteFormula>, ISupportsSave<NetsuiteFormula, Guid>, ISearcheableRepository<NetsuiteFormula, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateFormulaWithSession.

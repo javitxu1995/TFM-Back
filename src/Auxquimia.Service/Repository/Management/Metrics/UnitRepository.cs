@@ -1,6 +1,7 @@
 ﻿namespace Auxquimia.Repository.Management.Metrics
 {
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Management.Metrics;
     using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
@@ -37,9 +38,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Unit}}"/>.</returns>
-        public Task<IList<Unit>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
+        public Task<IList<Unit>> SearchByFilter(FindRequestDto<BaseSearchFilter> filter)
         {
             IQueryOver<Unit, Unit> qo = _session.QueryOver<Unit>();
 

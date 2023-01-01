@@ -1,6 +1,7 @@
 ﻿namespace Auxquimia.Repository.Management.Factories
 {
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Management.Factories;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Izertis.NHibernate.Repositories;
@@ -81,9 +82,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FactoryManager}}"/>.</returns>
-        public Task<IList<FactoryManager>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
+        public Task<IList<FactoryManager>> PaginatedAsync(FindRequestDto<BaseSearchFilter> filter)
         {
             IQueryOver<FactoryManager, FactoryManager> qo = _session.QueryOver<FactoryManager>();
 

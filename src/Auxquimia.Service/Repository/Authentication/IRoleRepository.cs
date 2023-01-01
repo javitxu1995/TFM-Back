@@ -4,13 +4,14 @@
     using Auxquimia.Model.Authentication;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IRoleRepository" />.
     /// </summary>
-    interface IRoleRepository : IRepositoryBase<Role>, ISupportsSave<Role, Guid>, ISearcheable<Role, RoleSearchFilter>
+    interface IRoleRepository : IRepositoryBase<Role>, ISupportsSave<Role, Guid>, ISearcheableRepository<Role, RoleSearchFilter>
     {
         /// <summary>
         /// The getByName.

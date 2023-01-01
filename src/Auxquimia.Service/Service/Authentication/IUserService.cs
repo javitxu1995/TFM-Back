@@ -1,16 +1,19 @@
 namespace Auxquimia.Service.Authentication
 {
     using Auxquimia.Dto.Authentication;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Service.Filters.Authentication;
-    using Izertis.Interfaces.Abstractions;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
+    using Auxquimia.Utils.MVC.Tools.Servs;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Service to handle Operator entity related operations.
     /// </summary>
-    public interface IUserService : IService<UserDto, Guid>, ISupportsSave<UserDto, Guid>, ISearchableService<UserDto, UserSearchFilter>
+    public interface IUserService : IService<UserDto, Guid>, ISupportsSave<UserDto, Guid>, ISearcheableService<UserDto, UserSearchFilter>
     {
         /// <summary>
         /// Finds the by username and password asynchronous.
@@ -47,14 +50,14 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        Task<Page<UserDto>> SearchHighUsers(FindRequestDto<UserSearchFilter> filter);
+        Task<IList<UserDto>> SearchHighUsers(FindRequestDto<UserSearchFilter> filter);
 
         /// <summary>
         /// The SearchForSelect.
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        Task<Page<UserDto>> SearchForSelect(FindRequestDto<UserSearchFilter> filter);
+        Task<IList<UserDto>> SearchForSelect(FindRequestDto<UserSearchFilter> filter);
 
         /// <summary>
         /// The FindByCode.

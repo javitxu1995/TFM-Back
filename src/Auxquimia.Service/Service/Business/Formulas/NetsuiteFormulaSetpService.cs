@@ -2,6 +2,7 @@
 {
     using Auxquimia.Dto.Business.Formulas;
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Repository.Business.Formulas;
     using Auxquimia.Utils;
@@ -71,7 +72,7 @@
         /// <returns>The <see cref="Task{Page{NetsuiteFormulaStepDto}}"/>.</returns>
         public async Task<Page<NetsuiteFormulaStepDto>> PaginatedAsync(FindRequestDto<BaseSearchFilter> filter)
         {
-            var findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
+            var findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
             var result = await netsuiteFormulaStepRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
             return result.PerformMapping<Page<NetsuiteFormulaStep>, Page<NetsuiteFormulaStepDto>>();
         }

@@ -3,12 +3,11 @@ namespace Auxquimia.Service.Authentication
     using Auxquimia.Config;
     using Auxquimia.Dto.Authentication;
     using Auxquimia.Exceptions;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Repository.Authentication;
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -17,7 +16,6 @@ namespace Auxquimia.Service.Authentication
     /// <summary>
     /// Defines the <see cref="UserService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class UserService : IUserService
     {
         /// <summary>
@@ -53,11 +51,11 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        public async Task<Page<UserDto>> PaginatedAsync(FindRequestDto<UserSearchFilter> filter)
+        public async Task<IList<UserDto>> SearchByFilter(FindRequestDto<UserSearchFilter> filter)
         {
-            FindRequestImpl<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestImpl<UserSearchFilter>>();
-            Page<User> result = await userRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<User>, Page<UserDto>>();
+            FindRequestDto<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestDto<UserSearchFilter>>();
+            IList<User> result = await userRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<User>, IList<UserDto>>();
         }
 
         /// <summary>
@@ -82,22 +80,10 @@ namespace Auxquimia.Service.Authentication
         }
 
         /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        public async Task<Page<UserDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            var result = await userRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<User>, Page<UserDto>>();
-        }
-
-        /// <summary>
         /// The SaveAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="UserDto"/>.</param>
         /// <returns>The <see cref="Task{UserDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<UserDto> SaveAsync(UserDto entity)
         {
             User result = new User();
@@ -119,10 +105,13 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="entity">The entity<see cref="IList{UserDto}"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<UserDto> entity)
+        public Task SaveAsync(IList<UserDto> entities)
         {
-            return userRepository.SaveAsync(entity.PerformMapping<IList<UserDto>, IList<User>>());
+            foreach(UserDto entity in entities)
+            {
+                userRepository.SaveAsync(entity.PerformMapping<UserDto, User>());
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -130,7 +119,6 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="entity">The entity<see cref="UserDto"/>.</param>
         /// <returns>The <see cref="Task{UserDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<UserDto> UpdateAsync(UserDto entity)
         {
             User result = new User();
@@ -183,7 +171,6 @@ namespace Auxquimia.Service.Authentication
         /// <param name="userId">The userId<see cref="Guid"/>.</param>
         /// <param name="enabled">The enabled<see cref="bool"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task ToggleEnabledUserAsync(Guid userId, bool enabled)
         {
             await userRepository.ToggleEnabledUserAsync(userId, enabled).ConfigureAwait(false);
@@ -254,11 +241,11 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        public async Task<Page<UserDto>> SearchHighUsers(FindRequestDto<UserSearchFilter> filter)
+        public async Task<IList<UserDto>> SearchHighUsers(FindRequestDto<UserSearchFilter> filter)
         {
-            FindRequestImpl<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestImpl<UserSearchFilter>>();
-            Page<User> result = await userRepository.SearchHighUsers(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<User>, Page<UserDto>>();
+            FindRequestDto<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestDto<UserSearchFilter>>();
+            IList<User> result = await userRepository.SearchHighUsers(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<User>, IList<UserDto>>();
         }
 
         /// <summary>
@@ -266,11 +253,11 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        public async Task<Page<UserDto>> SearchForSelect(FindRequestDto<UserSearchFilter> filter)
+        public async Task<IList<UserDto>> SearchForSelect(FindRequestDto<UserSearchFilter> filter)
         {
-            FindRequestImpl<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestImpl<UserSearchFilter>>();
-            Page<User> result = await userRepository.SearchForSelect(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<User>, Page<UserDto>>();
+            FindRequestDto<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestDto<UserSearchFilter>>();
+            IList<User> result = await userRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<User>, IList<UserDto>>();
         }
 
         /// <summary>
@@ -313,7 +300,6 @@ namespace Auxquimia.Service.Authentication
         /// <param name="code">The code<see cref="int"/>.</param>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{UserDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private async Task<bool> SaveUserSafe(int code, Guid id = default(Guid))
         {
 
@@ -365,7 +351,6 @@ namespace Auxquimia.Service.Authentication
         /// </summary>
         /// <param name="userId">The userId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<bool> ResetPasswordForUser(Guid userId)
         {
             User user = await this.userRepository.GetAsync(userId);
@@ -399,7 +384,6 @@ namespace Auxquimia.Service.Authentication
         /// <param name="userId">The userId<see cref="Guid"/>.</param>
         /// <param name="password">The password<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<bool> UpdatePasswordForUser(Guid userId, string password)
         {
             User user = await this.userRepository.FindByPasswordToken(userId).ConfigureAwait(false);

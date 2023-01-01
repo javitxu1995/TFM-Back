@@ -5,6 +5,7 @@
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -13,7 +14,7 @@
     /// <summary>
     /// Defines the <see cref="IFormulaStepRepository" />.
     /// </summary>
-    public interface IFormulaStepRepository : IRepositoryBase<FormulaStep>, ISupportsDelete<FormulaStep>, ISupportsSave<FormulaStep, Guid>, ISearcheable<FormulaStep, BaseSearchFilter>
+    public interface IFormulaStepRepository : IRepositoryBase<FormulaStep>, ISupportsDelete<FormulaStep>, ISupportsSave<FormulaStep, Guid>, ISearcheableRepository<FormulaStep, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateStepWithSession.

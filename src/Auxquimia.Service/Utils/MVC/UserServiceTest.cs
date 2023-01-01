@@ -1,6 +1,6 @@
 ﻿using Auxquimia.Model.Authentication;
 using Auxquimia.Utils.MVC.InternalDatabase;
-using Auxquimia.Utils.MVC.Tools;
+using Auxquimia.Utils.MVC.Tools.Servs;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -2,8 +2,8 @@
 {
     using Auxquimia.Enums;
     using Auxquimia.Exceptions;
-    using Auxquimia.Filters;
     using Auxquimia.Filters.Business.AssemblyBuilds;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.AssemblyBuilds;
     using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
@@ -142,7 +142,7 @@
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Task<IList<AssemblyBuild>> SearchByFilter(FindRequestImpl<BaseAssemblyBuildSearchFilter> filter)
+        public Task<IList<AssemblyBuild>> SearchByFilter(FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
         {
             IQueryOver<AssemblyBuild, AssemblyBuild> qo = _session.QueryOver<AssemblyBuild>();
 

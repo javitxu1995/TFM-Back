@@ -1,9 +1,11 @@
 ﻿namespace Auxquimia.Repository.Business.Formulas
 {
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -12,7 +14,7 @@
     /// <summary>
     /// Defines the <see cref="IFormulaRepository" />.
     /// </summary>
-    public interface IFormulaRepository : IRepositoryBase<Formula>, ISupportsSave<Formula, Guid>, ISearcheable<Formula, BaseSearchFilter>
+    public interface IFormulaRepository : IRepositoryBase<Formula>, ISupportsSave<Formula, Guid>, ISearcheableRepository<Formula, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateFormulaWithSession.
@@ -25,15 +27,15 @@
         /// <summary>
         /// The GetForAssembly.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Formula}}"/>.</returns>
-        Task<IList<Formula>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter);
+        Task<IList<Formula>> GetForAssembly(FindRequestDto<BaseSearchFilter> filter);
 
         /// <summary>
         /// The FindNotOnProduction.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Formula}}"/>.</returns>
-        Task<IList<Formula>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter);
+        Task<IList<Formula>> FindNotOnProduction(FindRequestDto<BaseSearchFilter> filter);
     }
 }

@@ -4,6 +4,7 @@
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -12,7 +13,7 @@
     /// <summary>
     /// Defines the <see cref="INetsuiteFormulaStepRepository" />.
     /// </summary>
-    public interface INetsuiteFormulaStepRepository : IRepositoryBase<NetsuiteFormulaStep>, ISupportsDelete<NetsuiteFormulaStep>, ISupportsSave<NetsuiteFormulaStep, Guid>, ISearcheable<NetsuiteFormulaStep, BaseSearchFilter> 
+    public interface INetsuiteFormulaStepRepository : IRepositoryBase<NetsuiteFormulaStep>, ISupportsDelete<NetsuiteFormulaStep>, ISupportsSave<NetsuiteFormulaStep, Guid>, ISearcheableRepository<NetsuiteFormulaStep, BaseSearchFilter> 
     {
         /// <summary>
         /// The UpdateStepWithSession.

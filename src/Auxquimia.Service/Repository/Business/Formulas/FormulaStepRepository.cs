@@ -1,6 +1,7 @@
 ﻿namespace Auxquimia.Repository.Business.Formulas
 {
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
@@ -128,9 +129,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaStep}}"/>.</returns>
-        public Task<IList<FormulaStep>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
+        public Task<IList<FormulaStep>> SearchByFilter(FindRequestDto<BaseSearchFilter> filter)
         {
             IQueryOver<FormulaStep, FormulaStep> qo = _session.QueryOver<FormulaStep>();
 

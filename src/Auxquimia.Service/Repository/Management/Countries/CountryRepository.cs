@@ -1,6 +1,6 @@
 ﻿namespace Auxquimia.Repository.Management.Countries
 {
-    using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Management.Countries;
     using Auxquimia.Service.Filters.Management.Countries;
     using Auxquimia.Utils;
@@ -53,7 +53,7 @@
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        public Task<IList<Country>> SearchByFilter(FindRequestImpl<CountrySearchFilter> filter)
+        public Task<IList<Country>> SearchByFilter(FindRequestDto<CountrySearchFilter> filter)
         {
             IQueryOver<Country, Country> qo = _session.QueryOver<Country>();
 

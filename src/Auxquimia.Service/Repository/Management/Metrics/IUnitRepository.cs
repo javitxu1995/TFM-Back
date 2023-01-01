@@ -4,13 +4,14 @@
     using Auxquimia.Model.Management.Metrics;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IUnitRepository" />.
     /// </summary>
-    interface IUnitRepository : IRepositoryBase<Unit>, ISupportsSave<Unit, Guid>, ISearcheable<Unit, BaseSearchFilter>
+    interface IUnitRepository : IRepositoryBase<Unit>, ISupportsSave<Unit, Guid>, ISearcheableRepository<Unit, BaseSearchFilter>
     {
         /// <summary>
         /// The FindByCode.

@@ -1,7 +1,7 @@
 ﻿namespace Auxquimia.Repository.Authentication
 {
-    using Auxquimia.Filters;
     using Auxquimia.Filters.Authentication;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
@@ -100,7 +100,7 @@
             return entity;
         }
 
-        public Task<IList<UserRole>> SearchByFilter(FindRequestImpl<RoleSearchFilter> filter)
+        public Task<IList<UserRole>> SearchByFilter(FindRequestDto<RoleSearchFilter> filter)
         {
             IQueryOver<UserRole, UserRole> qo = _session.QueryOver<UserRole>();
 

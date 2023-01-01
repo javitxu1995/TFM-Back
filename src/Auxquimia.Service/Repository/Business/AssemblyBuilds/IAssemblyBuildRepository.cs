@@ -4,6 +4,7 @@
     using Auxquimia.Model.Business.AssemblyBuilds;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -13,8 +14,7 @@
     /// Defines the <see cref="IAssemblyBuildRepository" />.
     /// </summary>
 
-    public interface IAssemblyBuildRepository : IRepositoryBase<AssemblyBuild>, ISupportsSave<AssemblyBuild, Guid>, ISearcheable<AssemblyBuild, BaseAssemblyBuildSearchFilter>
-        //ISupportsSave<AssemblyBuild, Guid>, IDao<AssemblyBuild, Guid>, ISearchableDao<AssemblyBuild, BaseAssemblyBuildSearchFilter>
+    public interface IAssemblyBuildRepository : IRepositoryBase<AssemblyBuild>, ISupportsSave<AssemblyBuild, Guid>, ISearcheableRepository<AssemblyBuild, BaseAssemblyBuildSearchFilter>        
     {
         /// <summary>
         /// The Get TotallWoByStatus.

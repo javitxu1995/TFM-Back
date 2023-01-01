@@ -1,6 +1,6 @@
 ﻿namespace Auxquimia.Repository.Management.Factories
 {
-    using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Filters.Management.Factories;
     using Auxquimia.Model.Management.Factories;
     using Auxquimia.Utils;
@@ -81,9 +81,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{ReactorSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{ReactorSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Reactor}}"/>.</returns>
-        public Task<IList<Reactor>> SearchByFilter(FindRequestImpl<ReactorSearchFilter> filter)
+        public Task<IList<Reactor>> SearchByFilter(FindRequestDto<ReactorSearchFilter> filter)
         {
             IQueryOver<Reactor, Reactor> qo = _session.QueryOver<Reactor>();
 

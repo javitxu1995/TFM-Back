@@ -2,6 +2,7 @@
 {
     using Auxquimia.Dto.Management.Metrics;
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Management.Metrics;
     using Auxquimia.Repository.Management.Metrics;
     using Auxquimia.Utils;
@@ -101,7 +102,7 @@
         /// <returns>The <see cref="Task{Page{UnitDto}}"/>.</returns>
         public async Task<Page<UnitDto>> PaginatedAsync(FindRequestDto<BaseSearchFilter> filter)
         {
-            FindRequestImpl<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
+            FindRequestDto<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
             Page<Unit> result = await this.unitRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
             return result.PerformMapping<Page<Unit>, Page<UnitDto>>();
         }

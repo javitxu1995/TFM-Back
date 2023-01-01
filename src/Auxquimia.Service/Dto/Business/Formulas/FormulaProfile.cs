@@ -5,6 +5,7 @@
     using Auxquimia.Dto.Business.AssemblyBuilds;
     using Auxquimia.Dto.Management.Metrics;
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.Formulas;
     using Auxquimia.Repository.Business.Formulas;
     using Auxquimia.Utils;
@@ -26,7 +27,7 @@
         public FormulaProfile()
         {
             // Formula search filter
-            CreateMap<FindRequestDto<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
+            CreateMap<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
 
 
             // Formula

@@ -2,6 +2,7 @@
 {
     using Auxquimia.Dto.Business.Formulas;
     using Auxquimia.Filters;
+    using Auxquimia.Filters.FindRequests;
     using Izertis.Interfaces.Abstractions;
     using Izertis.Paging.Abstractions;
     using System;
@@ -22,7 +23,7 @@
         /// <summary>
         /// The FindNotOnProduction.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
         Task<Page<FormulaDto>> FindNotOnProduction(FindRequestDto<BaseSearchFilter> filter);
     }

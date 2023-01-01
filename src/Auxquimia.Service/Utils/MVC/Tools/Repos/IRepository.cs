@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Auxquimia.Utils.MVC.Tools
+namespace Auxquimia.Utils.MVC.Tools.Repos
 {
     public interface IRepository<T, Guid>
     {

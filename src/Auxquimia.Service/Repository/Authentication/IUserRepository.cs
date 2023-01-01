@@ -4,6 +4,7 @@ namespace Auxquimia.Repository.Authentication
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Auxquimia.Repository.Authentication
     /// <summary>
     /// Defines the <see cref="IUserRepository" />.
     /// </summary>
-    public interface IUserRepository : IRepositoryBase<User>, ISupportsDelete<User>, ISupportsSave<User, Guid>, ISearcheable<User , UserSearchFilter>
+    public interface IUserRepository : IRepositoryBase<User>, ISupportsDelete<User>, ISupportsSave<User, Guid>, ISearcheableRepository<User , UserSearchFilter>
     {
         /// <summary>
         /// The FindByUsernameAndPasswordAsync.
