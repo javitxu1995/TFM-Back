@@ -2,9 +2,8 @@
 {
     using Auxquimia.Filters;
     using Auxquimia.Model.Business.Formulas;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -14,14 +13,14 @@
     /// <summary>
     /// Defines the <see cref="NetsuiteFormulaRepository" />.
     /// </summary>
-    internal class NetsuiteFormulaRepository : NHibernateRepository, INetsuiteFormulaRepository
+    internal class NetsuiteFormulaRepository : RepositoryBase<NetsuiteFormula>, INetsuiteFormulaRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NetsuiteFormulaRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
         /// <param name="sessionFactoryProvider">The sessionFactoryProvider<see cref="IFluentNhibernateLocalSessionFactoryProvider"/>.</param>
-        public NetsuiteFormulaRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public NetsuiteFormulaRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 
@@ -29,9 +28,9 @@
         /// The GetAllAsync.
         /// </summary>
         /// <returns>The <see cref="Task{IList{NetsuiteFormula}}"/>.</returns>
-        public new Task<IList<NetsuiteFormula>> GetAllAsync()
+        public override Task<IList<NetsuiteFormula>> GetAllAsync()
         {
-            return GetAllAsync<NetsuiteFormula>();
+            return _session.QueryOver<NetsuiteFormula>().ListAsync();
         }
 
         /// <summary>
@@ -39,19 +38,9 @@
         /// </summary>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{NetsuiteFormula}"/>.</returns>
-        public Task<NetsuiteFormula> GetAsync(Guid id)
+        public override Task<NetsuiteFormula> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<NetsuiteFormula>().Where(x => x.Id == id).SingleOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{NetsuiteFormula}}"/>.</returns>
-        public Task<Page<NetsuiteFormula>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<NetsuiteFormula>(), pageRequest);
+            return _session.QueryOver<NetsuiteFormula>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -59,9 +48,9 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{NetsuiteFormula}}"/>.</returns>
-        public new Task<Page<NetsuiteFormula>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
+        public new Task<IList<NetsuiteFormula>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
-            IQueryOver<NetsuiteFormula, NetsuiteFormula> qo = CurrentSession.QueryOver<NetsuiteFormula>();
+            IQueryOver<NetsuiteFormula, NetsuiteFormula> qo = _session.QueryOver<NetsuiteFormula>();
 
             if (filter.Filter != null)
             {
@@ -78,7 +67,7 @@
 
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -93,23 +82,13 @@
         }
 
         /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{NetsuiteFormula}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveAsync(IList<NetsuiteFormula> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// The UpdateAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="NetsuiteFormula"/>.</param>
         /// <returns>The <see cref="Task{NetsuiteFormula}"/>.</returns>
-        public async Task<NetsuiteFormula> UpdateAsync(NetsuiteFormula entity)
+        public async override Task<NetsuiteFormula> UpdateAsync(NetsuiteFormula entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -122,5 +101,6 @@
         {
             return await session.MergeAsync(entity).ConfigureAwait(false);
         }
+
     }
 }

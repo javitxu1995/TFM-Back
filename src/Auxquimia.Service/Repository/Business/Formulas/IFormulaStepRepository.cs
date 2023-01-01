@@ -2,7 +2,9 @@
 {
     using Auxquimia.Filters;
     using Auxquimia.Model.Business.Formulas;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Service.Filters.Authentication;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -11,7 +13,7 @@
     /// <summary>
     /// Defines the <see cref="IFormulaStepRepository" />.
     /// </summary>
-    public interface IFormulaStepRepository : ISupportsSave<FormulaStep, Guid>, IDao<FormulaStep, Guid>, ISupportsDelete<FormulaStep, Guid>, ISearchableDao<FormulaStep, BaseSearchFilter>
+    public interface IFormulaStepRepository : IRepositoryBase<FormulaStep>, ISupportsDelete<FormulaStep>, ISupportsSave<FormulaStep, Guid>, ISearcheable<FormulaStep, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateStepWithSession.

@@ -2,9 +2,8 @@
 {
     using Auxquimia.Filters;
     using Auxquimia.Model.Business.Formulas;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -14,14 +13,14 @@
     /// <summary>
     /// Defines the <see cref="NetsuiteFormulaStepRepository" />.
     /// </summary>
-    internal class NetsuiteFormulaStepRepository : NHibernateRepository, INetsuiteFormulaStepRepository
+    internal class NetsuiteFormulaStepRepository : RepositoryBase<NetsuiteFormulaStep>, INetsuiteFormulaStepRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NetsuiteFormulaStepRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
         /// <param name="sessionFactoryProvider">The sessionFactoryProvider<see cref="IFluentNhibernateLocalSessionFactoryProvider"/>.</param>
-        public NetsuiteFormulaStepRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public NetsuiteFormulaStepRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 
@@ -30,9 +29,10 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="NetsuiteFormulaStep"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public Task DeleteAsync(NetsuiteFormulaStep entity)
+        public async Task<NetsuiteFormulaStep> DeleteAsync(NetsuiteFormulaStep entity)
         {
-            return CurrentSession.DeleteAsync(entity);
+            await _session.DeleteAsync(entity).ConfigureAwait(false);
+            return entity;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@
         /// <returns>The <see cref="Task{int}"/>.</returns>
         public Task<int> DeleteAsync(Guid id)
         {
-            IQuery query = CurrentSession.CreateQuery("delete NETSUITE_FORMULA_STEP where Id = :id");
+            IQuery query = _session.CreateQuery("delete NETSUITE_FORMULA_STEP where Id = :id");
             query.SetGuid("id", id);
 
             return query.ExecuteUpdateAsync();
@@ -65,9 +65,9 @@
         /// The GetAllAsync.
         /// </summary>
         /// <returns>The <see cref="Task{IList{NetsuiteFormulaStep}}"/>.</returns>
-        public Task<IList<NetsuiteFormulaStep>> GetAllAsync()
+        public override Task<IList<NetsuiteFormulaStep>> GetAllAsync()
         {
-            return GetAllAsync<NetsuiteFormulaStep>();
+            return _session.QueryOver<NetsuiteFormulaStep>().ListAsync();
         }
 
         /// <summary>
@@ -75,9 +75,9 @@
         /// </summary>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{NetsuiteFormulaStep}"/>.</returns>
-        public Task<NetsuiteFormulaStep> GetAsync(Guid id)
+        public override Task<NetsuiteFormulaStep> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<NetsuiteFormulaStep>().Where(x => x.Id == id).SingleOrDefaultAsync();
+            return _session.QueryOver<NetsuiteFormulaStep>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@
         /// <returns>The <see cref="Task{NetsuiteFormulaStep}"/>.</returns>
         public Task<NetsuiteFormulaStep> GetByStepAndLot(int step, string lot)
         {
-            return CurrentSession.QueryOver<NetsuiteFormulaStep>().Where(x => x.AdditionSequence == step && x.InventoryLot == lot).SingleOrDefaultAsync();
+            return _session.QueryOver<NetsuiteFormulaStep>().Where(x => x.AdditionSequence == step && x.InventoryLot == lot).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -114,24 +114,15 @@
             return session.QueryOver<NetsuiteFormulaStep>().Where(x => x.AdditionSequence == step && x.InventoryLot == lot).SingleOrDefaultAsync();
         }
 
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{NetsuiteFormulaStep}}"/>.</returns>
-        public Task<Page<NetsuiteFormulaStep>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<NetsuiteFormulaStep>(), pageRequest);
-        }
 
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{NetsuiteFormulaStep}}"/>.</returns>
-        public Task<Page<NetsuiteFormulaStep>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
+        public Task<IList<NetsuiteFormulaStep>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
-            IQueryOver<NetsuiteFormulaStep, NetsuiteFormulaStep> qo = CurrentSession.QueryOver<NetsuiteFormulaStep>();
+            IQueryOver<NetsuiteFormulaStep, NetsuiteFormulaStep> qo = _session.QueryOver<NetsuiteFormulaStep>();
 
             if (filter.Filter != null)
             {
@@ -148,7 +139,7 @@
 
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -160,16 +151,6 @@
         {
             await base.SaveAsync(entity).ConfigureAwait(false);
             return entity;
-        }
-
-        /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{NetsuiteFormulaStep}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveAsync(IList<NetsuiteFormulaStep> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -189,9 +170,9 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="NetsuiteFormulaStep"/>.</param>
         /// <returns>The <see cref="Task{NetsuiteFormulaStep}"/>.</returns>
-        public async Task<NetsuiteFormulaStep> UpdateAsync(NetsuiteFormulaStep entity)
+        public async override Task<NetsuiteFormulaStep> UpdateAsync(NetsuiteFormulaStep entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
