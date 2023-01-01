@@ -2,7 +2,8 @@
 {
     using Auxquimia.Filters.Management.Factories;
     using Auxquimia.Model.Management.Factories;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -11,7 +12,7 @@
     /// <summary>
     /// Defines the <see cref="IReactorRepository" />.
     /// </summary>
-    public interface IReactorRepository : ISupportsSave<Reactor, Guid>, IDao<Reactor, Guid>, ISearchableDao<Reactor, ReactorSearchFilter>
+    public interface IReactorRepository : IRepositoryBase<Reactor>, ISupportsSave<Reactor, Guid>, ISearcheable<Reactor, ReactorSearchFilter>    
     {
         /// <summary>
         /// The FindByCodeAsync.

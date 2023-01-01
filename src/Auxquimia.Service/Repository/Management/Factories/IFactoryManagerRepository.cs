@@ -2,14 +2,15 @@
 {
     using Auxquimia.Filters;
     using Auxquimia.Model.Management.Factories;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.InternalDatabase;
+    using Auxquimia.Utils.MVC.Tools;
     using System;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IFactoryManagerRepository" />.
     /// </summary>
-    interface IFactoryManagerRepository : ISupportsSave<FactoryManager, Guid>, IDao<FactoryManager, Guid>, ISearchableDao<FactoryManager, BaseSearchFilter>, ISupportsDelete<FactoryManager, Guid>
+    interface IFactoryManagerRepository : IRepositoryBase<FactoryManager>, ISupportsDelete<FactoryManager>, ISupportsSave<FactoryManager, Guid>, ISearcheable<FactoryManager, BaseSearchFilter>   
     {
         Task<FactoryManager> GetByManagerIdAndFactoryId(Guid managerId, Guid factoryId);
     }

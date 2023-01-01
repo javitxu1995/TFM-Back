@@ -15,7 +15,7 @@
     /// <summary>
     /// Defines the <see cref="FactoryRepository" />.
     /// </summary>
-    internal class FactoryRepository : NHibernateRepository, IFactoryRepository
+    internal class FactoryRepository : RepositoryBase<Reactor>, IFactoryRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryRepository"/> class.

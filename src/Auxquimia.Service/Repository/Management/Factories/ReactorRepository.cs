@@ -1,10 +1,10 @@
 ﻿namespace Auxquimia.Repository.Management.Factories
 {
+    using Auxquimia.Filters;
     using Auxquimia.Filters.Management.Factories;
     using Auxquimia.Model.Management.Factories;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils;
+    using Auxquimia.Utils.MVC.InternalDatabase;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -14,14 +14,14 @@
     /// <summary>
     /// Defines the <see cref="ReactorRepository" />.
     /// </summary>
-    internal class ReactorRepository : NHibernateRepository, IReactorRepository
+    internal class ReactorRepository : RepositoryBase<Reactor>, IReactorRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ReactorRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
         /// <param name="sessionFactoryProvider">The sessionFactoryProvider<see cref="IFluentNhibernateLocalSessionFactoryProvider"/>.</param>
-        public ReactorRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public ReactorRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 
@@ -32,7 +32,7 @@
         /// <returns>The <see cref="Task{Reactor}"/>.</returns>
         public Task<Reactor> FindByCodeAsync(string code)
         {
-            return CurrentSession.QueryOver<Reactor>().Where(x => x.Code == code).SingleOrDefaultAsync();
+            return _session.QueryOver<Reactor>().Where(x => x.Code == code).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -42,21 +42,16 @@
         /// <returns>The <see cref="Task{Reactor}"/>.</returns>
         public Task<Reactor> FindByNameAsync(string name)
         {
-            return CurrentSession.QueryOver<Reactor>().Where(x => x.Name == name).SingleOrDefaultAsync();
+            return _session.QueryOver<Reactor>().Where(x => x.Name == name).SingleOrDefaultAsync();
         }
 
         /// <summary>
         /// The GetAllAsync.
         /// </summary>
         /// <returns>The <see cref="Task{IList{Reactor}}"/>.</returns>
-        public Task<IList<Reactor>> GetAllAsync()
+        public override Task<IList<Reactor>> GetAllAsync()
         {
-            return GetAllAsync<Reactor>();
-        }
-
-        public Task<IList<Reactor>> GetAllAsyncWithSession(ISession session)
-        {
-            return session.QueryOver<Reactor>().ListAsync();
+            return _session.QueryOver<Reactor>().ListAsync();
         }
 
         /// <summary>
@@ -65,9 +60,12 @@
         /// <returns>The <see cref="IList{Reactor}"/>.</returns>
         public IList<Reactor> GetAllSync()
         {
-            return CurrentSession.QueryOver<Reactor>().List();
+            return _session.QueryOver<Reactor>().List();
+        }
 
-            //return SessionFactory.GetCurrentSession().QueryOver<Reactor>().List();
+        public Task<IList<Reactor>> GetAllAsyncWithSession(ISession session)
+        {
+            return session.QueryOver<Reactor>().ListAsync();
         }
 
         /// <summary>
@@ -75,19 +73,9 @@
         /// </summary>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{Reactor}"/>.</returns>
-        public Task<Reactor> GetAsync(Guid id)
+        public override Task<Reactor> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<Reactor>().Where(x => x.Id == id).SingleOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{Reactor}}"/>.</returns>
-        public Task<Page<Reactor>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<Reactor>(), pageRequest);
+            return _session.QueryOver<Reactor>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -95,9 +83,9 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{ReactorSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Reactor}}"/>.</returns>
-        public Task<Page<Reactor>> PaginatedAsync(FindRequestImpl<ReactorSearchFilter> filter)
+        public Task<IList<Reactor>> SearchByFilter(FindRequestImpl<ReactorSearchFilter> filter)
         {
-            IQueryOver<Reactor, Reactor> qo = CurrentSession.QueryOver<Reactor>();
+            IQueryOver<Reactor, Reactor> qo = _session.QueryOver<Reactor>();
 
             if (filter.Filter != null)
             {
@@ -118,7 +106,7 @@
                 }
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -133,23 +121,13 @@
         }
 
         /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{Reactor}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveAsync(IList<Reactor> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// The UpdateAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="Reactor"/>.</param>
         /// <returns>The <see cref="Task{Reactor}"/>.</returns>
-        public async Task<Reactor> UpdateAsync(Reactor entity)
+        public async override Task<Reactor> UpdateAsync(Reactor entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
     }
 }
