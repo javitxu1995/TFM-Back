@@ -129,9 +129,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaStep}}"/>.</returns>
-        public Task<IList<FormulaStep>> SearchByFilter(FindRequestDto<BaseSearchFilter> filter)
+        public Task<IList<FormulaStep>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
             IQueryOver<FormulaStep, FormulaStep> qo = _session.QueryOver<FormulaStep>();
 

@@ -16,15 +16,15 @@
         /// <summary>
         /// The GetForAssembly.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
-        Task<Page<FormulaDto>> GetForAssembly(FindRequestDto<BaseSearchFilter> filter);
+        Task<Page<FormulaDto>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter);
 
         /// <summary>
         /// The FindNotOnProduction.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
-        Task<Page<FormulaDto>> FindNotOnProduction(FindRequestDto<BaseSearchFilter> filter);
+        Task<Page<FormulaDto>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter);
     }
 }

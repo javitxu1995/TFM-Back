@@ -68,11 +68,11 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{NetsuiteFormulaStepDto}}"/>.</returns>
-        public async Task<Page<NetsuiteFormulaStepDto>> PaginatedAsync(FindRequestDto<BaseSearchFilter> filter)
+        public async Task<Page<NetsuiteFormulaStepDto>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
         {
-            var findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            var findRequest = filter.PerformMapping<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
             var result = await netsuiteFormulaStepRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
             return result.PerformMapping<Page<NetsuiteFormulaStep>, Page<NetsuiteFormulaStepDto>>();
         }

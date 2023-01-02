@@ -81,9 +81,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{ReactorSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{ReactorSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Reactor}}"/>.</returns>
-        public Task<IList<Reactor>> SearchByFilter(FindRequestDto<ReactorSearchFilter> filter)
+        public Task<IList<Reactor>> SearchByFilter(FindRequestImpl<ReactorSearchFilter> filter)
         {
             IQueryOver<Reactor, Reactor> qo = _session.QueryOver<Reactor>();
 

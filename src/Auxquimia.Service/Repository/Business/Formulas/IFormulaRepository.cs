@@ -27,15 +27,15 @@
         /// <summary>
         /// The GetForAssembly.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Formula}}"/>.</returns>
-        Task<IList<Formula>> GetForAssembly(FindRequestDto<BaseSearchFilter> filter);
+        Task<IList<Formula>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter);
 
         /// <summary>
         /// The FindNotOnProduction.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Formula}}"/>.</returns>
-        Task<IList<Formula>> FindNotOnProduction(FindRequestDto<BaseSearchFilter> filter);
+        Task<IList<Formula>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter);
     }
 }

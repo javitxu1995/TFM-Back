@@ -14,6 +14,6 @@ namespace Auxquimia.Utils.MVC.Tools.Repos
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Task<IList<T>> SearchByFilter(FindRequestDto<F> filter);
+        public Task<IList<T>> SearchByFilter(FindRequestImpl<F> filter);
     }
 }

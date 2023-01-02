@@ -95,9 +95,9 @@ namespace Auxquimia.Repository.Authentication
         /// <summary>
         /// The SearchHighUsers.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
-        public Task<IList<User>> SearchHighUsers(UserSearchFilter uFilter)
+        public Task<IList<User>> SearchHighUsers(FindRequestImpl<UserSearchFilter> filter)
         {
             User userAlias = null;
             UserRole userRoleAlias = null;
@@ -107,9 +107,9 @@ namespace Auxquimia.Repository.Authentication
                 .JoinEntityAlias(() => userRoleAlias, () => userRoleAlias.User.Id == userAlias.Id)
                 .JoinAlias(() => userRoleAlias.Role, () => roleAlias);
 
-            if (uFilter != null)
+            if (filter != null && filter.Filter != null)
             {
-
+                UserSearchFilter uFilter = filter.Filter;
                 if (StringUtils.HasText(uFilter.Email))
                 {
                     qo.And(Restrictions.On<User>(x => x.Email).IsInsensitiveLike(uFilter.Email, MatchMode.Anywhere));
@@ -173,20 +173,20 @@ namespace Auxquimia.Repository.Authentication
         /// <summary>
         /// The SearchForSelect.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{User}}"/>.</returns>
-        public Task<IList<User>> SearchForSelect(UserSearchFilter filter)
+        public Task<IList<User>> SearchForSelect(FindRequestImpl<UserSearchFilter> filter)
         {
             IQueryOver<User, User> qo = _session.QueryOver<User>();
 
-            if (filter != null)
+            if (filter != null && filter.Filter != null)
             {
-
-                if (StringUtils.HasText(filter.Name))
+                UserSearchFilter uFilter = filter.Filter;
+                if (StringUtils.HasText(uFilter.Name))
                 {
-                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(filter.Name, MatchMode.Anywhere) ||
-                        Restrictions.On<User>(x => x.Name).IsInsensitiveLike(filter.Name, MatchMode.Anywhere) ||
-                        Restrictions.On<User>(x => x.Surname).IsInsensitiveLike(filter.Name, MatchMode.Anywhere));
+                    qo.And(Restrictions.On<User>(x => x.Username).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere) ||
+                        Restrictions.On<User>(x => x.Name).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere) ||
+                        Restrictions.On<User>(x => x.Surname).IsInsensitiveLike(uFilter.Name, MatchMode.Anywhere));
                 }
             }
 
@@ -239,7 +239,7 @@ namespace Auxquimia.Repository.Authentication
         }
 
 
-        public Task<IList<User>> SearchByFilter(FindRequestDto<UserSearchFilter> filter)
+        public Task<IList<User>> SearchByFilter(FindRequestImpl<UserSearchFilter> filter)
         {
             IQueryOver<User, User> qo = _session.QueryOver<User>();
 

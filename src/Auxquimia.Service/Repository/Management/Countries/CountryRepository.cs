@@ -53,7 +53,7 @@
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        public Task<IList<Country>> SearchByFilter(FindRequestDto<CountrySearchFilter> filter)
+        public Task<IList<Country>> SearchByFilter(FindRequestImpl<CountrySearchFilter> filter)
         {
             IQueryOver<Country, Country> qo = _session.QueryOver<Country>();
 

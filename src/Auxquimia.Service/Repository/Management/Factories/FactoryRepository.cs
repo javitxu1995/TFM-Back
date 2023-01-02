@@ -68,9 +68,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{FactorySearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{FactorySearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Factory}}"/>.</returns>
-        public Task<Page<Factory>> PaginatedAsync(FindRequestDto<FactorySearchFilter> filter)
+        public Task<Page<Factory>> PaginatedAsync(FindRequestImpl<FactorySearchFilter> filter)
         {
             IQueryOver<Factory, Factory> qo = CurrentSession.QueryOver<Factory>();
 

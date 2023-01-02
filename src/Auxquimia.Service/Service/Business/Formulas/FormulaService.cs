@@ -48,9 +48,9 @@
             this.contextConfigProvider = contextConfigProvider;
         }
 
-        public async Task<List<FormulaDto>> FindNotOnProduction(FindRequestDto<BaseSearchFilter> filter)
+        public async Task<List<FormulaDto>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter)
         {
-            FindRequestDto<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            FindRequestImpl<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
             List<Formula> result = await this.formulaRepository.FindNotOnProduction(findRequest).ConfigureAwait(false);
             //result.Content = result.Content.Where(x => x.AssemblyBuild == null || x.AssemblyBuild.Status == Enums.ABStatus.PENDING).ToList();
             //result.TotalPages = result.Content.Count / result.NumberOfElements;
@@ -81,11 +81,11 @@
         /// <summary>
         /// The GetForAssembly.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
-        public async Task<Page<FormulaDto>> GetForAssembly(FindRequestDto<BaseSearchFilter> filter)
+        public async Task<Page<FormulaDto>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter)
         {
-            FindRequestDto<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            FindRequestImpl<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
             Page<Formula> result = await this.formulaRepository.GetForAssembly(findRequest).ConfigureAwait(false);
             return result.PerformMapping<Page<Formula>, Page<FormulaDto>>();
         }
@@ -104,11 +104,11 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
-        public async Task<Page<FormulaDto>> PaginatedAsync(FindRequestDto<BaseSearchFilter> filter)
+        public async Task<Page<FormulaDto>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
         {
-            FindRequestDto<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            FindRequestImpl<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
             Page<Formula> result = await this.formulaRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
             return result.PerformMapping<Page<Formula>, Page<FormulaDto>>();
         }

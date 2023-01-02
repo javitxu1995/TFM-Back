@@ -98,11 +98,11 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UnitDto}}"/>.</returns>
-        public async Task<Page<UnitDto>> PaginatedAsync(FindRequestDto<BaseSearchFilter> filter)
+        public async Task<Page<UnitDto>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
         {
-            FindRequestDto<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            FindRequestImpl<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
             Page<Unit> result = await this.unitRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
             return result.PerformMapping<Page<Unit>, Page<UnitDto>>();
         }

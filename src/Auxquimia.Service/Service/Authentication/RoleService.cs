@@ -2,11 +2,10 @@
 {
     using Auxquimia.Dto.Authentication;
     using Auxquimia.Filters.Authentication;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Repository.Authentication;
     using Auxquimia.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -14,7 +13,6 @@
     /// <summary>
     /// Defines the <see cref="RoleService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class RoleService : IRoleService
     {
         /// <summary>
@@ -83,27 +81,16 @@
         }
 
         /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{RoleDto}}"/>.</returns>
-        public async Task<Page<RoleDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            var result = await roleRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Role>, Page<RoleDto>>();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
+        /// The SearchByFilter.
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{RoleSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{RoleDto}}"/>.</returns>
-        public async Task<Page<RoleDto>> PaginatedAsync(FindRequestDto<RoleSearchFilter> filter)
+        public async Task<IList<RoleDto>> SearchByFilter(FindRequestDto<RoleSearchFilter> filter)
         {
             var findRequest = filter.PerformMapping<FindRequestDto<RoleSearchFilter>, FindRequestImpl<RoleSearchFilter>>();
-            var result = await roleRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
+            var result = await roleRepository.SearchByFilter(findRequest).ConfigureAwait(false);
 
-            return result.PerformMapping<Page<Role>, Page<RoleDto>>();
+            return result.PerformMapping<IList<Role>, IList<RoleDto>>();
         }
 
         /// <summary>
@@ -111,7 +98,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="RoleDto"/>.</param>
         /// <returns>The <see cref="Task{RoleDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<RoleDto> SaveAsync(RoleDto entity)
         {
             Role role = entity.PerformMapping<RoleDto, Role>();
@@ -127,10 +113,13 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="IList{RoleDto}"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<RoleDto> entity)
+        public Task SaveAsync(IList<RoleDto> entities)
         {
-            return roleRepository.SaveAsync(entity.PerformMapping<IList<RoleDto>, IList<Role>>());
+            foreach(RoleDto entity in entities)
+            {
+                roleRepository.SaveAsync(entity.PerformMapping<RoleDto, Role>());
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -138,7 +127,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="RoleDto"/>.</param>
         /// <returns>The <see cref="Task{RoleDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<RoleDto> UpdateAsync(RoleDto entity)
         {
             Role storedRole = await roleRepository.GetAsync(entity.Id.PerformMapping<string, Guid>()).ConfigureAwait(false);

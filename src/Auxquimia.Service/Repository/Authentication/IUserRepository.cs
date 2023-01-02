@@ -1,5 +1,6 @@
 namespace Auxquimia.Repository.Authentication
 {
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Service.Filters.Authentication;
     using Auxquimia.Utils.MVC.InternalDatabase;
@@ -85,5 +86,19 @@ namespace Auxquimia.Repository.Authentication
         /// <param name="factoryId">The factoryId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{User}"/>.</returns>
         Task<User> FindByUsernameAndFactoryAsyncWithSession(ISession session, string username, Guid factoryId);
+
+        /// <summary>
+        /// Search users to fill a select
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        Task<IList<User>> SearchForSelect(FindRequestImpl<UserSearchFilter> filter);
+        /// <summary>
+        /// Search high users
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        Task<IList<User>> SearchHighUsers(FindRequestImpl<UserSearchFilter> filter);
+
     }
 }

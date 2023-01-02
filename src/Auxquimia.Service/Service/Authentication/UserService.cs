@@ -49,11 +49,11 @@ namespace Auxquimia.Service.Authentication
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
-        public async Task<IList<UserDto>> SearchByFilter(FindRequestDto<UserSearchFilter> filter)
+        public async Task<IList<UserDto>> SearchByFilter(FindRequestImpl<UserSearchFilter> filter)
         {
-            FindRequestDto<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestDto<UserSearchFilter>>();
+            FindRequestImpl<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestImpl<UserSearchFilter>, FindRequestImpl<UserSearchFilter>>();
             IList<User> result = await userRepository.SearchByFilter(findRequest).ConfigureAwait(false);
             return result.PerformMapping<IList<User>, IList<UserDto>>();
         }
@@ -239,11 +239,11 @@ namespace Auxquimia.Service.Authentication
         /// <summary>
         /// The SearchHighUsers.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
         public async Task<IList<UserDto>> SearchHighUsers(FindRequestDto<UserSearchFilter> filter)
         {
-            FindRequestDto<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestDto<UserSearchFilter>>();
+            FindRequestImpl<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestImpl<UserSearchFilter>>();
             IList<User> result = await userRepository.SearchHighUsers(findRequest).ConfigureAwait(false);
             return result.PerformMapping<IList<User>, IList<UserDto>>();
         }
@@ -251,11 +251,11 @@ namespace Auxquimia.Service.Authentication
         /// <summary>
         /// The SearchForSelect.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{UserSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{UserSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UserDto}}"/>.</returns>
         public async Task<IList<UserDto>> SearchForSelect(FindRequestDto<UserSearchFilter> filter)
         {
-            FindRequestDto<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestDto<UserSearchFilter>>();
+            FindRequestImpl<UserSearchFilter> findRequest = filter.PerformMapping<FindRequestDto<UserSearchFilter>, FindRequestImpl<UserSearchFilter>>();
             IList<User> result = await userRepository.SearchByFilter(findRequest).ConfigureAwait(false);
             return result.PerformMapping<IList<User>, IList<UserDto>>();
         }

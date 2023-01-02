@@ -27,7 +27,7 @@
         public FormulaProfile()
         {
             // Formula search filter
-            CreateMap<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            CreateMap<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
 
 
             // Formula

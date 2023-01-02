@@ -27,7 +27,7 @@
         {
         }
 
-        public Task<IList<Formula>> FindNotOnProduction(FindRequestDto<BaseSearchFilter> filter)
+        public Task<IList<Formula>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter)
         {
             IQueryOver<Formula, Formula> qo = _session.QueryOver<Formula>();
             AssemblyBuild assemblyAlias = null;
@@ -73,7 +73,7 @@
             return _session.QueryOver<Formula>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
-        public Task<IList<Formula>> GetForAssembly(FindRequestDto<BaseSearchFilter> filter)
+        public Task<IList<Formula>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter)
         {
             IQueryOver<Formula, Formula> qo = _session.QueryOver<Formula>();
 
@@ -97,7 +97,7 @@
         }
 
         
-        public Task<IList<Formula>> SearchByFilter(FindRequestDto<BaseSearchFilter> filter)
+        public Task<IList<Formula>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
             IQueryOver<Formula, Formula> qo = _session.QueryOver<Formula>();
 

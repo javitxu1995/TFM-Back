@@ -3,6 +3,7 @@
     using Auxquimia.Dto.Authentication;
     using Auxquimia.Filters.Authentication;
     using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
     using Auxquimia.Utils.MVC.Tools.Servs;
     using System;
     using System.Threading.Tasks;
@@ -10,7 +11,7 @@
     /// <summary>
     /// Defines the <see cref="IRoleService" />.
     /// </summary>
-    public interface IRoleService : IService<RoleDto, Guid>, ISupportsSave<RoleDto, Guid>, ISearcheableRepository<RoleDto, RoleSearchFilter>
+    public interface IRoleService : IService<RoleDto, Guid>, ISupportsSave<RoleDto, Guid>, ISearcheableService<RoleDto, RoleSearchFilter>
     {
         /// <summary>
         /// The getAdminRole.

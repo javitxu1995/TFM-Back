@@ -47,9 +47,9 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="filter">The filter<see cref="FindRequestDto{BaseSearchFilter}"/>.</param>
+        /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{NetsuiteFormula}}"/>.</returns>
-        public new Task<IList<NetsuiteFormula>> SearchByFilter(FindRequestDto<BaseSearchFilter> filter)
+        public new Task<IList<NetsuiteFormula>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
             IQueryOver<NetsuiteFormula, NetsuiteFormula> qo = _session.QueryOver<NetsuiteFormula>();
 

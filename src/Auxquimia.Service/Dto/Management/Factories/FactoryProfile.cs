@@ -24,7 +24,7 @@
         {
 
             // Base search filter
-            CreateMap<FindRequestDto<BaseSearchFilter>, FindRequestDto<BaseSearchFilter>>();
+            CreateMap<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
 
             // Reactor
             CreateMap<Reactor, ReactorDto>();

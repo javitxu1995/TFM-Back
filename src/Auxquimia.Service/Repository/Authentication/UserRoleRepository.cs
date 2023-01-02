@@ -100,7 +100,7 @@
             return entity;
         }
 
-        public Task<IList<UserRole>> SearchByFilter(FindRequestDto<RoleSearchFilter> filter)
+        public Task<IList<UserRole>> SearchByFilter(FindRequestImpl<RoleSearchFilter> filter)
         {
             IQueryOver<UserRole, UserRole> qo = _session.QueryOver<UserRole>();
 
