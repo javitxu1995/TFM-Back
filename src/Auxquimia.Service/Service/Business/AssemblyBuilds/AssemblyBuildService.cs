@@ -9,6 +9,7 @@
     using Auxquimia.Enums;
     using Auxquimia.Exceptions;
     using Auxquimia.Filters.Business.AssemblyBuilds;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Model.Business.AssemblyBuilds;
     using Auxquimia.Model.Business.Formulas;
@@ -24,9 +25,6 @@
     using Auxquimia.Utils.FileStorage;
     using Auxquimia.Utils.FileStorage.Model;
     using Auxquimia.Utils.Opc;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -38,7 +36,6 @@
     /// <summary>
     /// Defines the <see cref="AssemblyBuildService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class AssemblyBuildService : IAssemblyBuildService
     {
         /// <summary>
@@ -281,24 +278,13 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{AssemblyBuildDto}}"/>.</returns>
-        public async Task<Page<AssemblyBuildDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            var result = await assemblyBuildRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<AssemblyBuild>, Page<AssemblyBuildDto>>();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuildListDto}}"/>.</returns>
-        public async Task<Page<AssemblyBuildListDto>> PaginatedAsync(FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
+        public async Task<IList<AssemblyBuildListDto>> SearchByFilter(FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
         {
             var findRequest = filter.PerformMapping<FindRequestDto<BaseAssemblyBuildSearchFilter>, FindRequestImpl<BaseAssemblyBuildSearchFilter>>();
-            var result = await assemblyBuildRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<AssemblyBuild>, Page<AssemblyBuildListDto>>();
+            var result = await assemblyBuildRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<AssemblyBuild>, IList<AssemblyBuildListDto>>();
         }
 
         /// <summary>
@@ -307,7 +293,7 @@
         /// <param name="operatorName">The operatorName<see cref="string"/>.</param>
         /// <param name="filter">The filter<see cref="FindRequestDto{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuildListDto}}"/>.</returns>
-        public async Task<Page<AssemblyBuildListDto>> SearchByRole(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
+        public async Task<IList<AssemblyBuildListDto>> SearchByRole(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
         {
             User user = await this.userRepository.FindByUsernameAsync(operatorName);
 
@@ -318,8 +304,8 @@
             BaseAssemblyBuildSearchFilter nfilter = await FilterWithOperatorRestrictions(user, filter.Filter);
             filter.Filter = nfilter;
             var findRequest = filter.PerformMapping<FindRequestDto<BaseAssemblyBuildSearchFilter>, FindRequestImpl<BaseAssemblyBuildSearchFilter>>();
-            var result = await assemblyBuildRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<AssemblyBuild>, Page<AssemblyBuildListDto>>();
+            var result = await assemblyBuildRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<AssemblyBuild>, IList<AssemblyBuildListDto>>();
         }
 
         /// <summary>
@@ -328,21 +314,21 @@
         /// <param name="operatorName">The operatorName<see cref="string"/>.</param>
         /// <param name="filter">The filter<see cref="FindRequestDto{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuildListDto}}"/>.</returns>
-        public async Task<Page<AssemblyBuildListDto>> GetByMultipleStatus(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
+        public async Task<IList<AssemblyBuildListDto>> GetByMultipleStatus(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter)
         {
-            if (filter == null) { return default(Page<AssemblyBuildListDto>); }
+            if (filter == null) { return default(IList<AssemblyBuildListDto>); }
             User user = await this.userRepository.FindByUsernameAsync(operatorName);
 
             if (user == null)
             {
-                return default(Page<AssemblyBuildListDto>);
+                return default(IList<AssemblyBuildListDto>);
             }
             //Operator restrictions
             filter.Filter = await FilterWithOperatorRestrictions(user, filter.Filter);
             var findRequest = filter.PerformMapping<FindRequestDto<BaseAssemblyBuildSearchFilter>, FindRequestImpl<BaseAssemblyBuildSearchFilter>>();
             var result = await assemblyBuildRepository.GetByMultipleStatus(findRequest).ConfigureAwait(false);
 
-            return result.PerformMapping<Page<AssemblyBuild>, Page<AssemblyBuildListDto>>();
+            return result.PerformMapping<IList<AssemblyBuild>, IList<AssemblyBuildListDto>>();
         }
 
         /// <summary>
@@ -350,7 +336,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="AssemblyBuildDto"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> SaveAsync(AssemblyBuildDto entity)
         {
             AssemblyBuild assemblyBuild = entity.PerformMapping<AssemblyBuildDto, AssemblyBuild>();
@@ -389,22 +374,10 @@
         }
 
         /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{AssemblyBuildDto}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<AssemblyBuildDto> entity)
-        {
-            return assemblyBuildRepository.SaveAsync(entity.PerformMapping<IList<AssemblyBuildDto>, IList<AssemblyBuild>>());
-        }
-
-        /// <summary>
         /// The UpdateAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="AssemblyBuildDto"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> UpdateAsync(AssemblyBuildDto entity)
         {
             AssemblyBuild storedAssemblyBuild = await assemblyBuildRepository.GetAsync(entity.Id.PerformMapping<string, Guid>()).ConfigureAwait(false);
@@ -425,7 +398,6 @@
         /// The LoadFromFtp.
         /// </summary>
         /// <returns>The <see cref="Task{IList{AssemblyBuildDto}}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<IList<AssemblyBuildDto>> LoadFromFtp()
         {
             string ftpServer = contextConfigProvider.FtpServer;
@@ -608,7 +580,6 @@
         /// </summary>
         /// <param name="assemblyId">The assemblyId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> SendAssemblyToWaitingQueue(Guid assemblyId)
         {
 
@@ -667,7 +638,6 @@
         /// <param name="assemblyId">The assemblyId<see cref="Guid"/>.</param>
         /// <param name="operatorId">The operatorId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> UpdateOperatorAsync(Guid assemblyId, Guid operatorId)
         {
             AssemblyBuild assembly = await assemblyBuildRepository.GetAsync(assemblyId).ConfigureAwait(false);
@@ -682,7 +652,6 @@
         /// <param name="source">The source<see cref="AssemblyBuildDto"/>.</param>
         /// <param name="destination">The destination<see cref="AssemblyBuild"/>.</param>
         /// <returns>The <see cref="Task{NetsuiteFormula}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private async Task<NetsuiteFormula> HandleNetsuiteFormula(AssemblyBuildDto source, AssemblyBuild destination)
         {
             NetsuiteFormula actualFormula = source.NetsuiteFormula.PerformMapping<NetsuiteFormulaDto, NetsuiteFormula>();
@@ -725,7 +694,6 @@
         /// <param name="source">The source<see cref="NetsuiteFormulaDto"/>.</param>
         /// <param name="destination">The destination<see cref="NetsuiteFormula"/>.</param>
         /// <returns>The <see cref="Task{IList{NetsuiteFormulaStep}}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private async Task<IList<NetsuiteFormulaStep>> HandleNetsuiteSteps(NetsuiteFormulaDto source, NetsuiteFormula destination)
         {
             IList<NetsuiteFormulaStep> steps = source.Steps.PerformMapping<IList<NetsuiteFormulaStepDto>, IList<NetsuiteFormulaStep>>(); //Se pierden los lotes
@@ -773,7 +741,6 @@
         /// </summary>
         /// <param name="assemblyToUpdate">The assemblyToUpdate<see cref="AssemblyBuildDto"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<bool> UpdateAssemblyFromSatellite(AssemblyBuildDto assemblyToUpdate)
         {
             bool result = false;
@@ -934,7 +901,6 @@
         /// The SendToNetsuite.
         /// </summary>
         /// <returns>The <see cref="Task{IList{AssemblyBuildDto}}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<IList<AssemblyBuildListDto>> SendToNetsuite()
         {
             IList<AssemblyBuild> assembliesToWrite = await this.assemblyBuildRepository.GetAssembliesToNetsuite().ConfigureAwait(false);
@@ -984,7 +950,6 @@
         /// <param name="assemblyWritten">The assemblyWritten<see cref="AssemblyBuildDto"/>.</param>
         /// <param name="session">The session<see cref="ISession"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> MarkStepsAsWritten(AssemblyBuildDto assemblyWritten, ISession session = null)
         {
             if (assemblyWritten == null)
@@ -1160,7 +1125,6 @@
         /// <param name="username">The username<see cref="string"/>.</param>
         /// <param name="assemblyId">The assemblyId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> SendBackToProgress(string username, Guid assemblyId)
         {
             User user = await this.userRepository.FindByUsernameAsync(username).ConfigureAwait(false);
@@ -1337,6 +1301,15 @@
             AssemblyBuildDto assemblyCloned = assembly.PerformMapping<AssemblyBuild, AssemblyBuildDto>();
             AssemblyBuildDto assemblySelected = SelectUniqueLotForSteps(assemblyCloned, stepSequence);
             return assemblySelected;
+        }
+
+        public Task SaveAsync(IList<AssemblyBuildDto> entities)
+        {
+            foreach (AssemblyBuildDto entity in entities)
+            {
+                assemblyBuildRepository.SaveAsync(entity.PerformMapping<AssemblyBuildDto, AssemblyBuild>());
+            }
+            return Task.CompletedTask;
         }
     }
 }

@@ -3,8 +3,10 @@
     using Auxquimia.Dto.Business.AssemblyBuilds;
     using Auxquimia.Enums;
     using Auxquimia.Filters.Business.AssemblyBuilds;
-    using Izertis.Interfaces.Abstractions;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Filters.FindRequests;
+    using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
+    using Auxquimia.Utils.MVC.Tools.Servs;
     using NHibernate;
     using System;
     using System.Collections.Generic;
@@ -13,7 +15,7 @@
     /// <summary>
     /// Defines the <see cref="IAssemblyBuildService" />.
     /// </summary>
-    public interface IAssemblyBuildService : IService<AssemblyBuildDto, Guid>, ISupportsSave<AssemblyBuildDto, Guid>, ISearchableService<AssemblyBuildListDto, BaseAssemblyBuildSearchFilter>
+    public interface IAssemblyBuildService : IService<AssemblyBuildDto, Guid>, ISupportsSave<AssemblyBuildDto, Guid>, ISearcheableService<AssemblyBuildListDto, BaseAssemblyBuildSearchFilter>
     {
         /// <summary>
         /// The GetCountWoByStatus.
@@ -29,7 +31,7 @@
         /// <param name="operatorName">The operatorName<see cref="string"/>.</param>
         /// <param name="filter">The filter<see cref="FindRequestDto{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuildListDto}}"/>.</returns>
-        Task<Page<AssemblyBuildListDto>> GetByMultipleStatus(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter);
+        Task<IList<AssemblyBuildListDto>> GetByMultipleStatus(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter);
 
         /// <summary>
         /// The SearchByRole.
@@ -37,7 +39,7 @@
         /// <param name="operatorName">The operatorName<see cref="string"/>.</param>
         /// <param name="filter">The filter<see cref="FindRequestDto{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuildListDto}}"/>.</returns>
-        Task<Page<AssemblyBuildListDto>> SearchByRole(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter);
+        Task<IList<AssemblyBuildListDto>> SearchByRole(string operatorName, FindRequestDto<BaseAssemblyBuildSearchFilter> filter);
 
         /// <summary>
         /// The LoadFromFtp.

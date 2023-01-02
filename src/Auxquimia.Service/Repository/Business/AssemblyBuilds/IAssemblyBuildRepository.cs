@@ -1,6 +1,7 @@
 ﻿namespace Auxquimia.Repository.Management.Business.AssemblyBuilds
 {
     using Auxquimia.Filters.Business.AssemblyBuilds;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Business.AssemblyBuilds;
     using Auxquimia.Utils.MVC.InternalDatabase;
     using Auxquimia.Utils.MVC.Tools;
@@ -28,7 +29,7 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseAssemblyBuildSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{AssemblyBuild}}"/>.</returns>
-        Task<IList<AssemblyBuild>> GetByMultipleStatus(BaseAssemblyBuildSearchFilter filter);
+        Task<IList<AssemblyBuild>> GetByMultipleStatus(FindRequestImpl<BaseAssemblyBuildSearchFilter> filter);
 
         /// <summary>
         /// The GetToWaitingQueueAsync.
