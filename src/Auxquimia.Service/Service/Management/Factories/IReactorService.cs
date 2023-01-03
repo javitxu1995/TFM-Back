@@ -2,7 +2,9 @@
 {
     using Auxquimia.Dto.Management.Factories;
     using Auxquimia.Filters.Management.Factories;
-    using Izertis.Interfaces.Abstractions;
+    using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
+    using Auxquimia.Utils.MVC.Tools.Servs;
     using System;
     using System.Threading.Tasks;
 

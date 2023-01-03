@@ -2,13 +2,12 @@
 {
     using Auxquimia.Dto.Authentication;
     using Auxquimia.Dto.Management.Factories;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Filters.Management.Factories;
     using Auxquimia.Model.Authentication;
     using Auxquimia.Model.Management.Factories;
     using Auxquimia.Repository.Management.Factories;
     using Auxquimia.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -17,7 +16,6 @@
     /// <summary>
     /// Defines the <see cref="FactoryService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class FactoryService : IFactoryService
     {
         /// <summary>
@@ -72,24 +70,13 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{FactoryDto}}"/>.</returns>
-        public async Task<Page<FactoryDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            var result = await factoryRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Factory>, Page<FactoryDto>>();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{FactorySearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FactoryDto}}"/>.</returns>
-        public async Task<Page<FactoryListDto>> PaginatedAsync(FindRequestDto<FactorySearchFilter> filter)
+        public async Task<IList<FactoryListDto>> SearchByFilter(FindRequestDto<FactorySearchFilter> filter)
         {
             var findRequest = filter.PerformMapping<FindRequestDto<FactorySearchFilter>, FindRequestImpl<FactorySearchFilter>>();
-            var result = await factoryRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Factory>, Page<FactoryListDto>>();
+            var result = await factoryRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<Factory>, IList<FactoryListDto>>();
         }
 
         /// <summary>
@@ -97,7 +84,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="FactoryDto"/>.</param>
         /// <returns>The <see cref="Task{FactoryDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<FactoryDto> SaveAsync(FactoryDto entity)
         {
             Factory factory = entity.PerformMapping<FactoryDto, Factory>();
@@ -116,10 +102,12 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="IList{FactoryDto}"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<FactoryDto> entity)
+        public async Task SaveAsync(IList<FactoryDto> entity)
         {
-            return factoryRepository.SaveAsync(entity.PerformMapping<IList<FactoryDto>, IList<Factory>>());
+            foreach(FactoryDto factory in entity)
+            {
+                await SaveAsync(factory).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -127,7 +115,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="FactoryDto"/>.</param>
         /// <returns>The <see cref="Task{FactoryDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<FactoryDto> UpdateAsync(FactoryDto entity)
         {
             Factory storedFactory = await factoryRepository.GetAsync(entity.Id.PerformMapping<string, Guid>()).ConfigureAwait(false);
@@ -149,7 +136,6 @@
         /// <param name="source">The source<see cref="FactoryDto"/>.</param>
         /// <param name="destination">The destination<see cref="Factory"/>.</param>
         /// <returns>The <see cref="Task{IList{FactoryReactor}}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private async Task<IList<Reactor>> HandleReactors(FactoryDto source, Factory destination)
         {
             IList<Reactor> reactors = source.Reactors.PerformMapping<IList<ReactorDto>, IList<Reactor>>();

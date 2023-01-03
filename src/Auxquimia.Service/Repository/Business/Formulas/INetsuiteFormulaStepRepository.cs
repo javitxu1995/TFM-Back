@@ -13,7 +13,7 @@
     /// <summary>
     /// Defines the <see cref="INetsuiteFormulaStepRepository" />.
     /// </summary>
-    public interface INetsuiteFormulaStepRepository : IRepositoryBase<NetsuiteFormulaStep>, ISupportsDelete<NetsuiteFormulaStep>, ISupportsSave<NetsuiteFormulaStep, Guid>, ISearcheableRepository<NetsuiteFormulaStep, BaseSearchFilter> 
+    public interface INetsuiteFormulaStepRepository : IRepositoryBase<NetsuiteFormulaStep>, ISupportsDelete<NetsuiteFormulaStep>, ISupportsSave<NetsuiteFormulaStep, Guid>, ISearchableRepository<NetsuiteFormulaStep, BaseSearchFilter> 
     {
         /// <summary>
         /// The UpdateStepWithSession.

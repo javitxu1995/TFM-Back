@@ -2,12 +2,11 @@
 {
     using Auxquimia.Config;
     using Auxquimia.Dto.Management.Factories;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Filters.Management.Factories;
     using Auxquimia.Model.Management.Factories;
     using Auxquimia.Repository.Management.Factories;
     using Auxquimia.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -15,7 +14,6 @@
     /// <summary>
     /// Defines the <see cref="ReactorService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class ReactorService : IReactorService
     {
         /// <summary>
@@ -85,24 +83,13 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{ReactorDto}}"/>.</returns>
-        public async Task<Page<ReactorDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            var result = await reactorRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Reactor>, Page<ReactorDto>>();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{ReactorSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{ReactorDto}}"/>.</returns>
-        public async Task<Page<ReactorDto>> PaginatedAsync(FindRequestDto<ReactorSearchFilter> filter)
+        public async Task<IList<ReactorDto>> SearchByFilter(FindRequestDto<ReactorSearchFilter> filter)
         {
             var findRequest = filter.PerformMapping<FindRequestDto<ReactorSearchFilter>, FindRequestImpl<ReactorSearchFilter>>();
-            var result = await reactorRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Reactor>, Page<ReactorDto>>();
+            var result = await reactorRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<Reactor>, IList<ReactorDto>>();
         }
 
         /// <summary>
@@ -110,7 +97,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="ReactorDto"/>.</param>
         /// <returns>The <see cref="Task{ReactorDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<ReactorDto> SaveAsync(ReactorDto entity)
         {
             Reactor reactor = entity.PerformMapping<ReactorDto, Reactor>();
@@ -123,10 +109,12 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="IList{ReactorDto}"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<ReactorDto> entity)
+        public async Task SaveAsync(IList<ReactorDto> entity)
         {
-            return reactorRepository.SaveAsync(entity.PerformMapping<IList<ReactorDto>, IList<Reactor>>());
+            foreach(ReactorDto reactor in entity)
+            {
+                await SaveAsync(reactor).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -134,7 +122,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="ReactorDto"/>.</param>
         /// <returns>The <see cref="Task{ReactorDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<ReactorDto> UpdateAsync(ReactorDto entity)
         {
             Reactor storedReactor = await reactorRepository.GetAsync(entity.Id.PerformMapping<string, Guid>()).ConfigureAwait(false);

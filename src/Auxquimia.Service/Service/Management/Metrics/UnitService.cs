@@ -6,9 +6,6 @@
     using Auxquimia.Model.Management.Metrics;
     using Auxquimia.Repository.Management.Metrics;
     using Auxquimia.Utils;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -16,7 +13,6 @@
     /// <summary>
     /// Defines the <see cref="UnitService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class UnitService : IUnitService
     {
         /// <summary>
@@ -87,24 +83,13 @@
         /// <summary>
         /// The PaginatedAsync.
         /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{UnitDto}}"/>.</returns>
-        public async Task<Page<UnitDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            Page<Unit> result = await unitRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Unit>, Page<UnitDto>>();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{UnitDto}}"/>.</returns>
-        public async Task<Page<UnitDto>> PaginatedAsync(FindRequestImpl<BaseSearchFilter> filter)
+        public async Task<IList<UnitDto>> SearchByFilter(FindRequestImpl<BaseSearchFilter> filter)
         {
             FindRequestImpl<BaseSearchFilter> findRequest = filter.PerformMapping<FindRequestImpl<BaseSearchFilter>, FindRequestImpl<BaseSearchFilter>>();
-            Page<Unit> result = await this.unitRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Unit>, Page<UnitDto>>();
+            IList<Unit> result = await this.unitRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<Unit>, IList<UnitDto>>();
         }
 
         /// <summary>
@@ -112,7 +97,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="UnitDto"/>.</param>
         /// <returns>The <see cref="Task{UnitDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<UnitDto> SaveAsync(UnitDto entity)
         {
             Unit unit = entity.PerformMapping<UnitDto, Unit>();
@@ -127,10 +111,12 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="IList{UnitDto}"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<UnitDto> entity)
+        public async Task SaveAsync(IList<UnitDto> entity)
         {
-            return this.unitRepository.SaveAsync(entity.PerformMapping<IList<UnitDto>, IList<Unit>>());
+            foreach(UnitDto unit in entity)
+            {
+                await SaveAsync(unit).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -138,7 +124,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="UnitDto"/>.</param>
         /// <returns>The <see cref="Task{UnitDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<UnitDto> UpdateAsync(UnitDto entity)
         {
             Unit storedUnit = await unitRepository.GetAsync(entity.Id.PerformMapping<string, Guid>()).ConfigureAwait(false);

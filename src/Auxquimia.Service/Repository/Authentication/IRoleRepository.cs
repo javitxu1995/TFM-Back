@@ -11,7 +11,7 @@
     /// <summary>
     /// Defines the <see cref="IRoleRepository" />.
     /// </summary>
-    interface IRoleRepository : IRepositoryBase<Role>, ISupportsSave<Role, Guid>, ISearcheableRepository<Role, RoleSearchFilter>
+    interface IRoleRepository : IRepositoryBase<Role>, ISupportsSave<Role, Guid>, ISearchableRepository<Role, RoleSearchFilter>
     {
         /// <summary>
         /// The getByName.

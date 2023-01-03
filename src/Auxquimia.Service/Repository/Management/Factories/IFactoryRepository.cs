@@ -12,7 +12,7 @@
     /// <summary>
     /// Defines the <see cref="IFactoryRepository" />.
     /// </summary>
-    interface IFactoryRepository : IRepositoryBase<Factory>, ISupportsSave<Factory, Guid>, ISearcheableRepository<Factory, FactorySearchFilter>   
+    interface IFactoryRepository : IRepositoryBase<Factory>, ISupportsSave<Factory, Guid>, ISearchableRepository<Factory, FactorySearchFilter>   
     {
         Task<Factory> FindMainFactory();
     }

@@ -14,7 +14,7 @@
     /// <summary>
     /// Defines the <see cref="IFormulaRepository" />.
     /// </summary>
-    public interface IFormulaRepository : IRepositoryBase<Formula>, ISupportsSave<Formula, Guid>, ISearcheableRepository<Formula, BaseSearchFilter>
+    public interface IFormulaRepository : IRepositoryBase<Formula>, ISupportsSave<Formula, Guid>, ISearchableRepository<Formula, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateFormulaWithSession.

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Auxquimia.Utils.MVC.Tools.Repos
 {
-    public interface ISearcheableRepository<T, F> where F : ISearchFilter
+    public interface ISearchableRepository<T, F> where F : ISearchFilter
     {
         /// <summary>
         /// Search on database by given fiter
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Task<IList<T>> SearchByFilter(FindRequestImpl<F> filter);
+        Task<IList<T>> SearchByFilter(FindRequestImpl<F> filter);
     }
 }

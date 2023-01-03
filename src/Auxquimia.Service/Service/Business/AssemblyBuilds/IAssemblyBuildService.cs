@@ -15,7 +15,7 @@
     /// <summary>
     /// Defines the <see cref="IAssemblyBuildService" />.
     /// </summary>
-    public interface IAssemblyBuildService : IService<AssemblyBuildDto, Guid>, ISupportsSave<AssemblyBuildDto, Guid>, ISearcheableService<AssemblyBuildListDto, BaseAssemblyBuildSearchFilter>
+    public interface IAssemblyBuildService : IService<AssemblyBuildDto, Guid>, ISupportsSave<AssemblyBuildDto, Guid>, ISearchableService<AssemblyBuildListDto, BaseAssemblyBuildSearchFilter>
     {
         /// <summary>
         /// The GetCountWoByStatus.

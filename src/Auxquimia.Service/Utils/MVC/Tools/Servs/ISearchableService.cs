@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Auxquimia.Utils.MVC.Tools.Repos
 {
-    public interface ISearcheableService<T, F> where F : ISearchFilter
+    public interface ISearchableService<T, F> where F : ISearchFilter
     {
         /// <summary>
         /// Search on database by given fiter

@@ -17,7 +17,6 @@
     using Auxquimia.Utils.Kafka;
     using Auxquimia.Utils.Kafka.Enum;
     using Auxquimia.Utils.Kafka.Model;
-    using Izertis.NHibernate.Repositories;
     using Newtonsoft.Json;
     using NHibernate;
     using System;
@@ -29,7 +28,6 @@
     /// <summary>
     /// Defines the <see cref="AuxquimiaKafkaService" />.
     /// </summary>
-    [Transaction(ReadOnly = false)]
     internal class AuxquimiaKafkaService : IAuxquimiaKafkaService
     {
         /// <summary>
@@ -108,7 +106,6 @@
         /// The InitNewConsumer.
         /// </summary>
         /// <param name="topic">The topic<see cref="string"/>.</param>
-        [Transaction(ReadOnly = false)]
         public async void InitNewConsumer(string topic)
         {
             //Leer de satelite
@@ -265,7 +262,6 @@
         /// <summary>
         /// The Consume.
         /// </summary>
-        [Transaction(ReadOnly = false)]
         public async void Consume()
         {
             if (!KafkaManager.Get(KafkaEndpoint).IsConsumerCreated())
@@ -287,7 +283,6 @@
         /// <summary>
         /// The RestartLoop.
         /// </summary>
-        [Transaction(ReadOnly = false)]
         public void RestartLoop()
         {
             if (!KafkaLoop)
@@ -300,7 +295,6 @@
         /// <summary>
         /// The InitConsumerThread.
         /// </summary>
-        [Transaction(ReadOnly = false)]
         public void InitConsumerThread()
         {
             Task.Run(
@@ -436,7 +430,6 @@
         /// <param name="order">The order<see cref="OpcOrder"/>.</param>
         /// <param name="formula">The formula<see cref="NetsuiteFormulaDto"/>.</param>
         /// <returns>The <see cref="bool"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private bool FillOrderNetsuiteFormula(OpcOrder order, NetsuiteFormulaDto formula)
         {
             int maxSize = Constants.Opc.MAX_STEP_SIZE;
@@ -464,7 +457,6 @@
         /// </summary>
         /// <param name="order">The order<see cref="OpcOrder"/>.</param>
         /// <returns>The <see cref="AssemblyBuildDto"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private async Task FillAssemblyWithOrder(OpcOrder order)
         {
 
@@ -551,7 +543,6 @@
         /// <param name="assemblyWritten">The assemblyWritten<see cref="AssemblyBuildDto"/>.</param>
         /// <param name="session">The session<see cref="ISession"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
 
         private async Task<AssemblyBuildDto> MarkStepsAsWritted(AssemblyBuildDto assemblyWritten, ISession session = null)
         {
@@ -594,7 +585,6 @@
         /// <param name="stepId">The stepId<see cref="Guid"/>.</param>
         /// <param name="session">The session<see cref="ISession"/>.</param>
         /// <returns>The <see cref="Task{FormulaStepDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<FormulaStepDto> MarkFormulaStepAsWritted(Guid stepId, ISession session = null)
         {
             FormulaStep step = null;
@@ -628,7 +618,6 @@
         /// <param name="stepId">The stepId<see cref="Guid"/>.</param>
         /// <param name="session">The session<see cref="ISession"/>.</param>
         /// <returns>The <see cref="Task{NetsuiteFormulaStepDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<NetsuiteFormulaStepDto> MarkNetsuiteFormulaStepAsWritted(Guid stepId, ISession session = null)
         {
             NetsuiteFormulaStep step = null;
@@ -663,7 +652,6 @@
         /// <param name="assembly">The assembly<see cref="AssemblyBuild"/>.</param>
         /// <param name="opcData">The opcData<see cref="OpcOrder"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         private async Task<bool> UpdateAssembyWithOpcData(ISession session, AssemblyBuild assembly, OpcOrder opcData)
         {
             bool result = false;
@@ -925,7 +913,6 @@
         /// </summary>
         /// <param name="reactorId">The reactorId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{AssemblyBuildDto}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<AssemblyBuildDto> SendAssemblyToProduction(Guid reactorId)
         {
             AssemblyBuildDto assemblyWaiting = await CheckAssembliesToSend(reactorId);
@@ -990,7 +977,6 @@
         /// </summary>
         /// <param name="assemblyId">The assemblyId<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<bool> SendAbortOrder(Guid assemblyId)
         {
             AssemblyBuild assemblyBuild = await AuxquimiaServiceProvider.GetAssemblyBuildRepository().GetAsync(assemblyId).ConfigureAwait(false);
@@ -1031,7 +1017,6 @@
         /// </summary>
         /// <param name="lot">The lot<see cref="NetsuiteFormulaStepDto"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<bool> SaveAndSendNetsuiteLotNewLot(NetsuiteFormulaStepDto lot)
         {
             bool result = false;
@@ -1060,7 +1045,6 @@
         /// </summary>
         /// <param name="lot">The lot<see cref="FormulaStepDto"/>.</param>
         /// <returns>The <see cref="Task{bool}"/>.</returns>
-        [Transaction(ReadOnly = false)]
         public async Task<bool> SaveAndSendFormulaLotNewLot(FormulaStepDto lot)
         {
             bool result = false;

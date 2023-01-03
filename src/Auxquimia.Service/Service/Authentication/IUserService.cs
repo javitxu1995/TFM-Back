@@ -13,7 +13,7 @@ namespace Auxquimia.Service.Authentication
     /// <summary>
     /// Service to handle Operator entity related operations.
     /// </summary>
-    public interface IUserService : IService<UserDto, Guid>, ISupportsSave<UserDto, Guid>, ISearcheableService<UserDto, UserSearchFilter>
+    public interface IUserService : IService<UserDto, Guid>, ISupportsSave<UserDto, Guid>, ISearchableService<UserDto, UserSearchFilter>
     {
         /// <summary>
         /// Finds the by username and password asynchronous.

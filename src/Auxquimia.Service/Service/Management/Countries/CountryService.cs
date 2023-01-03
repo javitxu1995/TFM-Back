@@ -1,17 +1,15 @@
 ﻿namespace Auxquimia.Service.Management.Countries
 {
     using Auxquimia.Dto.Management.Countries;
+    using Auxquimia.Filters.FindRequests;
     using Auxquimia.Model.Management.Countries;
     using Auxquimia.Repository.Management.Countries;
     using Auxquimia.Service.Filters.Management.Countries;
     using Auxquimia.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    [Transaction(ReadOnly = true)]
     internal class CountryService : ICountryService
     {
 
@@ -73,27 +71,17 @@
             var result = await countryRepository.GetAsync(id).ConfigureAwait(false);
             return result.PerformMapping<Country, CountryDto>();
         }
-        /// <summary>
-        /// The PaginatedAsync
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/></param>
-        /// <returns>The <see cref="Task{Page{UserDto}}"/></returns>
-        public async Task<Page<CountryDto>> PaginatedAsync(PageRequest pageRequest)
-        {
-            var result = await countryRepository.PaginatedAsync(pageRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Country>, Page<CountryDto>>();
-        }
 
         /// <summary>
-        /// The PaginatedAsync
+        /// The SearchByFilter
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestDto{CountrySearchFilter}"/></param>
         /// <returns></returns>
-        public async Task<Page<CountryDto>> PaginatedAsync(FindRequestDto<CountrySearchFilter> filter)
+        public async Task<IList<CountryDto>> SearchByFilter(FindRequestDto<CountrySearchFilter> filter)
         {
             var findRequest = filter.PerformMapping<FindRequestDto<CountrySearchFilter>, FindRequestImpl<CountrySearchFilter>>();
-            var result = await countryRepository.PaginatedAsync(findRequest).ConfigureAwait(false);
-            return result.PerformMapping<Page<Country>, Page<CountryDto>>();
+            var result = await countryRepository.SearchByFilter(findRequest).ConfigureAwait(false);
+            return result.PerformMapping<IList<Country>, IList<CountryDto>>();
         }
 
         /// <summary>
@@ -101,7 +89,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="CountryDto"/></param>
         /// <returns>The <see cref="Task{CountryDto}"/></returns>
-        [Transaction(ReadOnly = false)]
         public async Task<CountryDto> SaveAsync(CountryDto entity)
         {
             Country country = entity.PerformMapping<CountryDto, Country>();
@@ -113,10 +100,12 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="IList{CountryDto}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        [Transaction(ReadOnly = false)]
-        public Task SaveAsync(IList<CountryDto> entity)
+        public async Task SaveAsync(IList<CountryDto> entity)
         {
-            return countryRepository.SaveAsync(entity.PerformMapping<IList<CountryDto>, IList<Country>>());
+            foreach(CountryDto country in entity)
+            {
+                await SaveAsync(country).ConfigureAwait(false);
+            }
         }
 
 
@@ -125,7 +114,6 @@
         /// </summary>
         /// <param name="entity">The entity<see cref="CountryDto"/></param>
         /// <returns>The <see cref="Task{CountryDto}"/></returns>
-        [Transaction(ReadOnly = false)]
         public async Task<CountryDto> UpdateAsync(CountryDto entity)
         {
             Country storedCountry = await countryRepository.GetAsync(entity.Id.PerformMapping<string, Guid>()).ConfigureAwait(false);

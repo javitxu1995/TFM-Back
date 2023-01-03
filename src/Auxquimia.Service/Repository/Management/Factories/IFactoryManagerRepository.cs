@@ -11,7 +11,7 @@
     /// <summary>
     /// Defines the <see cref="IFactoryManagerRepository" />.
     /// </summary>
-    interface IFactoryManagerRepository : IRepositoryBase<FactoryManager>, ISupportsDelete<FactoryManager>, ISupportsSave<FactoryManager, Guid>, ISearcheableRepository<FactoryManager, BaseSearchFilter>   
+    interface IFactoryManagerRepository : IRepositoryBase<FactoryManager>, ISupportsDelete<FactoryManager>, ISupportsSave<FactoryManager, Guid>, ISearchableRepository<FactoryManager, BaseSearchFilter>   
     {
         Task<FactoryManager> GetByManagerIdAndFactoryId(Guid managerId, Guid factoryId);
     }

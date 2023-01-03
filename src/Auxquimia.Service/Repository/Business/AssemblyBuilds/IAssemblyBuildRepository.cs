@@ -15,7 +15,7 @@
     /// Defines the <see cref="IAssemblyBuildRepository" />.
     /// </summary>
 
-    public interface IAssemblyBuildRepository : IRepositoryBase<AssemblyBuild>, ISupportsSave<AssemblyBuild, Guid>, ISearcheableRepository<AssemblyBuild, BaseAssemblyBuildSearchFilter>        
+    public interface IAssemblyBuildRepository : IRepositoryBase<AssemblyBuild>, ISupportsSave<AssemblyBuild, Guid>, ISearchableRepository<AssemblyBuild, BaseAssemblyBuildSearchFilter>        
     {
         /// <summary>
         /// The Get TotallWoByStatus.

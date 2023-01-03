@@ -8,7 +8,7 @@
     using System;
     using System.Threading.Tasks;
 
-    interface ICountryRepository : IRepositoryBase<Country>, ISupportsSave<Country, Guid>, ISearcheableRepository<Country, CountrySearchFilter>
+    interface ICountryRepository : IRepositoryBase<Country>, ISupportsSave<Country, Guid>, ISearchableRepository<Country, CountrySearchFilter>
  
     {
         /// <summary>

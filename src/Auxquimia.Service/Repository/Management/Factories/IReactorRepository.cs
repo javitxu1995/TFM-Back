@@ -13,7 +13,7 @@
     /// <summary>
     /// Defines the <see cref="IReactorRepository" />.
     /// </summary>
-    public interface IReactorRepository : IRepositoryBase<Reactor>, ISupportsSave<Reactor, Guid>, ISearcheableRepository<Reactor, ReactorSearchFilter>    
+    public interface IReactorRepository : IRepositoryBase<Reactor>, ISupportsSave<Reactor, Guid>, ISearchableRepository<Reactor, ReactorSearchFilter>    
     {
         /// <summary>
         /// The FindByCodeAsync.

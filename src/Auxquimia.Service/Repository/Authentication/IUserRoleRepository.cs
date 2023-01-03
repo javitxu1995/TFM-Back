@@ -11,7 +11,7 @@
     /// <summary>
     /// Defines the <see cref="IUserRoleRepository" />.
     /// </summary>
-    interface IUserRoleRepository : IRepositoryBase<UserRole>, ISupportsDelete<UserRole>, ISupportsSave<UserRole, Guid>, ISearcheableRepository<UserRole, RoleSearchFilter>
+    interface IUserRoleRepository : IRepositoryBase<UserRole>, ISupportsDelete<UserRole>, ISupportsSave<UserRole, Guid>, ISearchableRepository<UserRole, RoleSearchFilter>
     //ISupportsSave<UserRole, Guid>, IDao<UserRole, Guid>, ISearchableDao<UserRole, RoleSearchFilter>, ISupportsDelete<UserRole, Guid>
     {
         /// <summary>

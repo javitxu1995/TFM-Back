@@ -11,7 +11,7 @@
     /// <summary>
     /// Defines the <see cref="IUnitRepository" />.
     /// </summary>
-    interface IUnitRepository : IRepositoryBase<Unit>, ISupportsSave<Unit, Guid>, ISearcheableRepository<Unit, BaseSearchFilter>
+    interface IUnitRepository : IRepositoryBase<Unit>, ISupportsSave<Unit, Guid>, ISearchableRepository<Unit, BaseSearchFilter>
     {
         /// <summary>
         /// The FindByCode.

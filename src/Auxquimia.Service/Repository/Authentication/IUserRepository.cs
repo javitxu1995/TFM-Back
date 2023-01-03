@@ -14,7 +14,7 @@ namespace Auxquimia.Repository.Authentication
     /// <summary>
     /// Defines the <see cref="IUserRepository" />.
     /// </summary>
-    public interface IUserRepository : IRepositoryBase<User>, ISupportsDelete<User>, ISupportsSave<User, Guid>, ISearcheableRepository<User , UserSearchFilter>
+    public interface IUserRepository : IRepositoryBase<User>, ISupportsDelete<User>, ISupportsSave<User, Guid>, ISearchableRepository<User , UserSearchFilter>
     {
         /// <summary>
         /// The FindByUsernameAndPasswordAsync.

@@ -11,7 +11,7 @@
     /// <summary>
     /// Defines the <see cref="IRoleService" />.
     /// </summary>
-    public interface IRoleService : IService<RoleDto, Guid>, ISupportsSave<RoleDto, Guid>, ISearcheableService<RoleDto, RoleSearchFilter>
+    public interface IRoleService : IService<RoleDto, Guid>, ISupportsSave<RoleDto, Guid>, ISearchableService<RoleDto, RoleSearchFilter>
     {
         /// <summary>
         /// The getAdminRole.

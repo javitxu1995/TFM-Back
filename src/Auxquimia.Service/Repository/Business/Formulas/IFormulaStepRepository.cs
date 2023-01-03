@@ -14,7 +14,7 @@
     /// <summary>
     /// Defines the <see cref="IFormulaStepRepository" />.
     /// </summary>
-    public interface IFormulaStepRepository : IRepositoryBase<FormulaStep>, ISupportsDelete<FormulaStep>, ISupportsSave<FormulaStep, Guid>, ISearcheableRepository<FormulaStep, BaseSearchFilter>
+    public interface IFormulaStepRepository : IRepositoryBase<FormulaStep>, ISupportsDelete<FormulaStep>, ISupportsSave<FormulaStep, Guid>, ISearchableRepository<FormulaStep, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateStepWithSession.

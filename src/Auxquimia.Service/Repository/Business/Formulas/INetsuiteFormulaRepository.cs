@@ -12,7 +12,7 @@
     /// <summary>
     /// Defines the <see cref="INetsuiteFormulaRepository" />.
     /// </summary>
-    public interface INetsuiteFormulaRepository : IRepositoryBase<NetsuiteFormula>, ISupportsSave<NetsuiteFormula, Guid>, ISearcheableRepository<NetsuiteFormula, BaseSearchFilter>
+    public interface INetsuiteFormulaRepository : IRepositoryBase<NetsuiteFormula>, ISupportsSave<NetsuiteFormula, Guid>, ISearchableRepository<NetsuiteFormula, BaseSearchFilter>
     {
         /// <summary>
         /// The UpdateFormulaWithSession.
