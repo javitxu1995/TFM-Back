@@ -3,9 +3,11 @@
     using Auxquimia.Dto.Business.Formulas;
     using Auxquimia.Filters;
     using Auxquimia.Filters.FindRequests;
-    using Izertis.Interfaces.Abstractions;
-    using Izertis.Paging.Abstractions;
+    using Auxquimia.Utils.MVC.Tools;
+    using Auxquimia.Utils.MVC.Tools.Repos;
+    using Auxquimia.Utils.MVC.Tools.Servs;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -18,13 +20,13 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
-        Task<Page<FormulaDto>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter);
+        Task<IList<FormulaDto>> GetForAssembly(FindRequestImpl<BaseSearchFilter> filter);
 
         /// <summary>
         /// The FindNotOnProduction.
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{BaseSearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{FormulaDto}}"/>.</returns>
-        Task<Page<FormulaDto>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter);
+        Task<IList<FormulaDto>> FindNotOnProduction(FindRequestImpl<BaseSearchFilter> filter);
     }
 }

@@ -17,7 +17,6 @@
     /// <summary>
     /// Defines the <see cref="FormulaService" />.
     /// </summary>
-    [Transaction(ReadOnly = true)]
     internal class FormulaService : IFormulaService
     {
         /// <summary>

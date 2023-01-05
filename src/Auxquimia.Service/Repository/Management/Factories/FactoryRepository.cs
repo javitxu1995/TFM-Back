@@ -3,10 +3,8 @@
     using Auxquimia.Filters.FindRequests;
     using Auxquimia.Filters.Management.Factories;
     using Auxquimia.Model.Management.Factories;
+    using Auxquimia.Utils;
     using Auxquimia.Utils.MVC.InternalDatabase;
-    using Izertis.Misc.Utils;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.Paging.Abstractions;
     using NHibernate;
     using NHibernate.Criterion;
     using System;
@@ -16,14 +14,14 @@
     /// <summary>
     /// Defines the <see cref="FactoryRepository" />.
     /// </summary>
-    internal class FactoryRepository : RepositoryBase<Reactor>, IFactoryRepository
+    internal class FactoryRepository : RepositoryBase<Factory>, IFactoryRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FactoryRepository"/> class.
         /// </summary>
         /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
         /// <param name="sessionFactoryProvider">The sessionFactoryProvider<see cref="IFluentNhibernateLocalSessionFactoryProvider"/>.</param>
-        public FactoryRepository(IServiceProvider serviceProvider, IFluentNhibernateLocalSessionFactoryProvider sessionFactoryProvider) : base(serviceProvider, sessionFactoryProvider)
+        public FactoryRepository(IServiceProvider serviceProvider, NHibernateSessionProvider nHibernateSession) : base(serviceProvider, nHibernateSession)
         {
         }
 
@@ -33,16 +31,16 @@
         /// <returns>The <see cref="Task{Factory}"/>.</returns>
         public Task<Factory> FindMainFactory()
         {
-            return CurrentSession.QueryOver<Factory>().Where(x => x.Main).SingleOrDefaultAsync();
+            return _session.QueryOver<Factory>().Where(x => x.Main).SingleOrDefaultAsync();
         }
 
         /// <summary>
         /// The GetAllAsync.
         /// </summary>
         /// <returns>The <see cref="Task{IList{Factory}}"/>.</returns>
-        public Task<IList<Factory>> GetAllAsync()
+        public override Task<IList<Factory>> GetAllAsync()
         {
-            return GetAllAsync<Factory>();
+            return _session.QueryOver<Factory>().ListAsync();
         }
 
         /// <summary>
@@ -50,19 +48,9 @@
         /// </summary>
         /// <param name="id">The id<see cref="Guid"/>.</param>
         /// <returns>The <see cref="Task{Factory}"/>.</returns>
-        public Task<Factory> GetAsync(Guid id)
+        public override Task<Factory> GetAsync(Guid id)
         {
-            return CurrentSession.QueryOver<Factory>().Where(x => x.Id == id).SingleOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// The PaginatedAsync.
-        /// </summary>
-        /// <param name="pageRequest">The pageRequest<see cref="PageRequest"/>.</param>
-        /// <returns>The <see cref="Task{Page{Factory}}"/>.</returns>
-        public Task<Page<Factory>> PaginatedAsync(PageRequest pageRequest)
-        {
-            return PaginatedAsync(CurrentSession.QueryOver<Factory>(), pageRequest);
+            return _session.QueryOver<Factory>().Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -70,9 +58,9 @@
         /// </summary>
         /// <param name="filter">The filter<see cref="FindRequestImpl{FactorySearchFilter}"/>.</param>
         /// <returns>The <see cref="Task{Page{Factory}}"/>.</returns>
-        public Task<Page<Factory>> PaginatedAsync(FindRequestImpl<FactorySearchFilter> filter)
+        public Task<IList<Factory>> SearchByFilter(FindRequestImpl<FactorySearchFilter> filter)
         {
-            IQueryOver<Factory, Factory> qo = CurrentSession.QueryOver<Factory>();
+            IQueryOver<Factory, Factory> qo = _session.QueryOver<Factory>();
 
             if (filter.Filter != null)
             {
@@ -93,7 +81,7 @@
                 }
             }
 
-            return PaginatedAsync(qo, filter.PageRequest);
+            return qo.ListAsync();
         }
 
         /// <summary>
@@ -108,23 +96,13 @@
         }
 
         /// <summary>
-        /// The SaveAsync.
-        /// </summary>
-        /// <param name="entity">The entity<see cref="IList{Factory}"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveAsync(IList<Factory> entity)
-        {
-            await SaveAllAsync(entity).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// The UpdateAsync.
         /// </summary>
         /// <param name="entity">The entity<see cref="Factory"/>.</param>
         /// <returns>The <see cref="Task{Factory}"/>.</returns>
-        public async Task<Factory> UpdateAsync(Factory entity)
+        public async override Task<Factory> UpdateAsync(Factory entity)
         {
-            return await CurrentSession.MergeAsync(entity).ConfigureAwait(false);
+            return await _session.MergeAsync(entity).ConfigureAwait(false);
         }
     }
 }

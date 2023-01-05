@@ -6,9 +6,9 @@ namespace Auxquimia.Module
     using Auxquimia.Config;
     using Auxquimia.Utils;
     using Auxquimia.Utils.AutoFac;
-    using Izertis.Caching.Utilities;
-    using Izertis.NHibernate.Repositories;
-    using Izertis.NHibernate.Repositories.Interceptors;
+    //using Izertis.Caching.Utilities;
+    //using Izertis.NHibernate.Repositories;
+    //using Izertis.NHibernate.Repositories.Interceptors;
 
     /// <summary>
     /// Defines the <see cref="ServiceModule" />
